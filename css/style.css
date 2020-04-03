@@ -654,7 +654,7 @@ a[href*='tel'], a[href*='mailto'] {
 .main-decorated-box:before {
 	content: '';
 	position: absolute;
-	background: url("../images/perfil.png") no-repeat center center;
+	
 	background-size: contain;
 	width: 100%;
 	height: 100%;
