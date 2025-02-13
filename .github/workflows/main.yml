@@ -1,4 +1,4 @@
-name: Angular Build and Deploy
+name: Angular Build and Deploy to prod branch
 
 on:
   push:
