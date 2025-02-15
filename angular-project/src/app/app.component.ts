@@ -1,7 +1,7 @@
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Component, OnInit } from '@angular/core';
 import * as AOS from 'aos';
 import { Title, Meta } from '@angular/platform-browser';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {LanguageService} from "./services/language.service"
 import { Location, CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
