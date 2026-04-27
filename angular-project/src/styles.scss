@@ -1,0 +1,14 @@
+
+@use "assets/scss/variable" as *;
+@use "assets/scss/mixin" as *;
+@use "assets/scss/root";
+@use "assets/scss/header";
+@use "assets/scss/footer";
+@use "assets/scss/button";
+@use "assets/scss/color";
+@use "assets/scss/base";
+@use "assets/scss/style";
+
+
+@import "assets/vendor/bootstrap/icons/bootstrap-icons.css";
+@import "assets/vendor/font-awesome/css/all.min.css";
