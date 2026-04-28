@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "my-first-project": {
+    "crisortiz-githubpage": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/my-first-project"
+              "base": "dist/crisortiz-githubpage"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "my-first-project:build:production"
+              "buildTarget": "crisortiz-githubpage:build:production"
             },
             "development": {
-              "buildTarget": "my-first-project:build:development"
+              "buildTarget": "crisortiz-githubpage:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "my-first-project:build"
+            "buildTarget": "crisortiz-githubpage:build"
           }
         },
         "test": {
