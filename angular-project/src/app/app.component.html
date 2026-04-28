@@ -1,1 +1,5 @@
-<router-outlet />
+<section [ngClass]="{'fixed-header': fixedHeader}">
+  <app-header [activeSection]="activeSection"></app-header>
+  <app-main></app-main>
+</section>
+

@@ -1,0 +1,37 @@
+<div  class="container">
+    <div class="section-heading">
+        <h6><span> EDUCATION</span></h6>
+        <h2>My <span>education</span> & learning journey</h2>
+    </div>
+    <div class="services-carousel">
+        <owl-carousel-o [options]="customOptions">
+            @for (item of [
+                { img: '01', icon: 'bi-mortarboard-fill', title: "Bachelor's Degree", desc: 'Formal undergraduate studies providing a strong foundation in theory and practice.' },
+                { img: '02', icon: 'bi-journal-bookmark-fill', title: "Master's Studies", desc: 'Advanced coursework and research focused on deepening my expertise.' },
+                { img: '03', icon: 'bi-patch-check-fill', title: 'Professional Certifications', desc: 'Industry‑recognized certifications validating my skills and knowledge.' },
+                { img: '04', icon: 'bi-lightbulb-fill', title: 'Courses & Workshops', desc: 'Continuous learning through online courses, workshops, and training sessions.' }
+            ]; track item.title) {
+                <ng-template carouselSlide>
+                <div class="services-box" [style.background-image]="'url(assets/img/service-' + item.img + '.jpg)'">
+                    <div class="services-body">
+                    <div class="icon">
+                        <i [class]="item.icon"></i>
+                    </div>
+                    <h5>{{ item.title }}</h5>
+                    <p>{{ item.desc }}</p>
+                    <div class="rating">
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-half"></i>
+                    </div>
+                    </div>
+                </div>
+                </ng-template>
+            } @empty {
+                <div class="text-center">No hay servicios disponibles</div>
+            }
+        </owl-carousel-o>
+    </div>
+</div>

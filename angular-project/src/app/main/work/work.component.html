@@ -1,0 +1,44 @@
+<div  class="container">
+    <div class="row justify-content-between">
+        <div class="col-lg-5">
+            <div class="section-heading">
+                <h6><span>My Work</span></h6>
+                <h2>RECENT PROJECT</h2>
+            </div>
+        </div>
+    </div>
+    <div class="lightbox-gallery">
+    <owl-carousel-o [options]="customOptions">
+        @for (id of [1, 2, 3, 4, 5, 6]; track id) {
+            <ng-template carouselSlide>
+            <div class="project-box">
+                <div class="project-media">
+                <img [src]="'assets/img/popup-project-' + id + '.jpg'" title="" alt="">
+                <a class="gallery-link" 
+                    [href]="'assets/img/popup-project-' + id + '.jpg'" 
+                    [attr.data-title]="'Caption for image ' + id" 
+                    data-lightbox="services">
+                    <i class="bi-plus"></i>
+                </a>
+                </div>
+                <div class="project-body">
+                <div class="text">
+                    <h5>Website Design</h5>
+                    <span>Web Design, App Design</span>
+                </div>
+                <div class="link">
+                    <a class="p-link px_modal" 
+                    data-bs-toggle="modal" 
+                    [attr.data-bs-target]="'#project_' + id">
+                    <i class="bi-arrow-right"></i>
+                    </a>
+                </div>
+                </div>
+            </div>
+            </ng-template>
+        } @empty {
+            <div class="text-center">No hay proyectos disponibles</div>
+        }
+    </owl-carousel-o>
+</div>
+</div>
