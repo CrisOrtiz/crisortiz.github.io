@@ -1,29 +1,38 @@
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ApplicationConfig, provideZoneChangeDetection, isDevMode, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'; // Recomendado en v20 para mejor LCP
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-import { routes } from './app.routes';
-import { provideServiceWorker } from '@angular/service-worker';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+// Firebase (v20)
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { environment } from '../assets/environments/environment';
+
+// Traducciones
+import { TranslateModule } from '@ngx-translate/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-            provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }),
-          provideHttpClient(), // or provideHttpClient() in Angular v15
-          importProvidersFrom(TranslateModule.forRoot({
-            loader: {
-              provide: TranslateLoader,
-              useFactory: createTranslateLoader,
-              deps: [HttpClient]
-            }
-          })),
-        ]
-};
+    provideZonelessChangeDetection(), 
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
+    provideRouter([]),     
+    provideAnimationsAsync(),
+
+    provideHttpClient(withInterceptorsFromDi()),
+    
+    // 3. Configuración Firebase
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
+
+    // 4. Módulos heredados
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        defaultLanguage: 'en'
+      })
+    )
+  ]
+};
