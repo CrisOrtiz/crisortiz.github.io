@@ -1,13 +1,15 @@
 <div class="container">
     <owl-carousel-o [options]="customOptions2">
-        @for (slide of slidesStore; track slide.src) {
+        @for (slide of slidesStore; track slide.src; let i = $index) {
             <ng-template carouselSlide>
             <div class="p-3 text-center d-flex align-items-center justify-content-center" 
-                style="height: 250px; width: 100%;">
-                <img [src]="slide.src" 
+                style="height: 250px; width: 100%; position: relative;">
+                <img [ngSrc]="slide.src"  
                     [alt]="slide.alt" 
                     [title]="slide.title"
-                    style="object-fit: contain; max-width: 100%; max-height: 100%;">
+                    [priority]="i === 0"
+                    fill
+                    style="object-fit: contain;">
             </div>
             </ng-template>
         } @empty {

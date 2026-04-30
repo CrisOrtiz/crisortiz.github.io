@@ -1,14 +1,14 @@
-<div class="container">
+<div class="container" *ngIf="content as c">
     <div class="row align-items-center">
         <div class="col-lg-6">
             <div class="hs-text-box">
                 <h6><span>Cristhian Ortiz Mercado</span></h6>
-                <h1 style="font-size: 50px;">{{content?.salute || 'Hey! I am Cristhian'}}</h1>
-                <h2><span style="font-size: 60px;" >{{ content?.iam }} <br>
+                <h1 style="font-size: 50px;">{{ c.salute }}</h1>
+                <h2><span style="font-size: 60px;" >{{ c.iam }} <br>
                 </span><span class="typed-element" style="font-size: 55px;"></span></h2>
-                <p class="text" >{{ content?.fullstackdev }}{{ xpYears }}{{ content?.xpyears }}</p>
+                <p class="text" >{{ c.fullstackdev }}{{ xpYears }}{{ c.xpyears }}</p>
                 <div class="btn-bar d-flex align-items-sm-center flex-column flex-sm-row">
-                    <span style="color: white;" class="px-lg-1">{{ content?.contactme }}: </span>
+                    <span style="color: white;" class="px-lg-1">{{ c.contactme }}: </span>
                     <div class="social-icon ps-sm-4 pt-4 pt-sm-0 d-flex justify-content-center justify-content-sm-start">
                         <a class="linkedin" target="_blank" href="https://www.linkedin.com/in/cristhian-edwin-ortiz-mercado/"><i class="fab fa-linkedin-in"></i></a>
                         <a class="mail" target="_blank" href="mailto:cristhianortizmercado@gmail.com"><i class="fa-solid fa-envelope"></i></a>

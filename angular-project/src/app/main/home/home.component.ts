@@ -39,8 +39,15 @@ export class HomeComponent extends BaseContentComponent implements OnInit, OnDes
       try { this.typedInstance.destroy(); } catch {}
       this.typedInstance = undefined;
     }
+
+    const typedTarget = document.querySelector('.typed-element');
+    if (!typedTarget) {
+      // View may not be rendered yet when content arrives.
+      return;
+    }
+
     const strings = content?.typedStrings?.length ? content.typedStrings : typeoptions.strings;
-    this.typedInstance = new Typed('.typed-element', { ...typeoptions, strings });
+    this.typedInstance = new Typed(typedTarget as HTMLElement, { ...typeoptions, strings });
   }
 
   override ngOnDestroy(): void {

@@ -46,8 +46,9 @@ export class HeaderComponent extends BaseContentComponent implements OnInit, OnD
     this.currentLang = initial;
     this.translate.use(initial);
 
-    // subscribe once, init Typed on every new content
-    this.initContent(SECTION_NAME);
+    setTimeout(() => {
+      this.initContent(SECTION_NAME);
+    }, 0);
   }
 
   get otherLang(): string {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, doc, docData } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, merge, of } from 'rxjs';
@@ -10,7 +10,11 @@ export class ContentService {
 private _lang$ = new BehaviorSubject<string>(localStorage.getItem('lang') || this.translate.currentLang || this.translate.getDefaultLang() || 'en');
 public currentLang$ = this._lang$.asObservable();
     
- constructor(private firestore: Firestore, private translate: TranslateService) {}
+ constructor(
+  private firestore: Firestore,
+  private translate: TranslateService,
+  private injector: Injector
+ ) {}
 
   setLanguage(lang: string) {
     if (!lang) return;
@@ -21,8 +25,10 @@ public currentLang$ = this._lang$.asObservable();
 
   // Expects a document at "content/{lang}" with localized fields
   getContent(lang: string, section: string): Observable<any> {
-    const ref = doc(this.firestore, `content/${lang}/sections/${section}`);
-    return docData(ref, { idField: 'id' });
+    return runInInjectionContext(this.injector, () => {
+      const ref = doc(this.firestore, `content/${lang}/sections/${section}`);
+      return docData(ref, { idField: 'id' });
+    });
   }
 
   // Watch content for the active language and emit when TranslateService changes

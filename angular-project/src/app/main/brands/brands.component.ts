@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule, NgOptimizedImage } from '@angular/common'; 
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o'; 
 import { options2 } from '../constant';
 
@@ -7,6 +7,7 @@ import { options2 } from '../constant';
     selector: 'app-brands',
     imports: [
         CommonModule,
+        NgOptimizedImage,
         CarouselModule
     ],
     templateUrl: './brands.component.html',
