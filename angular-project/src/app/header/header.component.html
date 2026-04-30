@@ -21,27 +21,27 @@
         <ul class="main-menu">
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'home'" href="#home" (click)="fullPageScroll('home')">
-                    {{ content?.home }}
+                    {{ content?.home || (currentLang === 'es' ? 'Inicio' : 'Home') }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'about'" href="#about" (click)="fullPageScroll('about')"> 
-                    {{ content?.aboutme }}
+                    {{ content?.aboutme || (currentLang === 'es' ? 'Sobre mi' : 'About Me') }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'project'" href="#project" (click)="fullPageScroll('project')">
-                    {{ content?.education }}
+                    {{ content?.education || (currentLang === 'es' ? 'Educacion' : 'Education') }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'services'" href="#services" (click)="fullPageScroll('services')">
-                    {{ content?.xp }}
+                    {{ content?.xp || (currentLang === 'es' ? 'Experiencia' : 'Experience') }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'contact'" href="#contact" (click)="fullPageScroll('contact')">
-                    {{ content?.contact }}
+                    {{ content?.contact || (currentLang === 'es' ? 'Contacto' : 'Contact') }}
                 </a>
             </li>
         </ul>
