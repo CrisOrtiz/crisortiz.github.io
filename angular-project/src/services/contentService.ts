@@ -40,7 +40,6 @@ public currentLang$ = this._lang$.asObservable();
       this.translate.onLangChange.pipe(map((e: any) => e.lang))
     ).pipe(
       distinctUntilChanged(),
-      tap(lang => console.log('[ContentService] loading content for:', lang)),
       switchMap((lang: string) => this.getContent(lang, section))
     );
   }

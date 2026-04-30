@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core'; 
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ const SECTION_NAME = 'header_section';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent extends BaseContentComponent implements OnInit, OnDestroy {
+export class HeaderComponent extends BaseContentComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() activeSection: string = 'home';
   public sidebarOpen: boolean = false;
   public currentSection = 'home';
@@ -45,7 +45,9 @@ export class HeaderComponent extends BaseContentComponent implements OnInit, OnD
     const initial = saved || this.translate.currentLang || this.translate.getDefaultLang() || 'en';
     this.currentLang = initial;
     this.translate.use(initial);
+  }
 
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.initContent(SECTION_NAME);
     }, 0);

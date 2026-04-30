@@ -24,7 +24,9 @@ export class AboutComponent extends BaseContentComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.initContent(SECTION_NAME);
+    setTimeout(() => {
+      this.initContent(SECTION_NAME);
+    }, 0);
   }  
 
   xpYears: number = new Date().getFullYear() - 2020;

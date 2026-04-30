@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common'; 
+import { CommonModule } from '@angular/common'; 
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o'; 
 import { options2 } from '../constant';
 
@@ -7,7 +7,6 @@ import { options2 } from '../constant';
     selector: 'app-brands',
     imports: [
         CommonModule,
-        NgOptimizedImage,
         CarouselModule
     ],
     templateUrl: './brands.component.html',
@@ -21,31 +20,31 @@ export class BrandsComponent implements OnInit {
     this.slidesStore = [
       {
         id : 1,
-        src: "assets/img/logoumsa.png",
+        src: "assets/img/brands/logoumsa.png",
         alt: "logo-umsa",
         title: "logo-umsa",
       },
       {
         id : 2,
-        src: "assets/img/logocba.png",
+        src: "assets/img/brands/logocba.png",
         alt: "logo-cba",
         title: "logo-cba",
       },
       {
         id : 3,
-        src: "assets/img/logofunda.jpg",
+        src: "assets/img/brands/logofunda.jpg",
         alt: "logo-funda",
         title: "logo-funda",
       },
       {
         id : 4,
-        src: "assets/img/logojalasoft.png",
+        src: "assets/img/brands/logojalasoft.png",
         alt: "logo-jalasoft",
         title: "logo-jalasoft",
       },
       {
         id : 5,
-        src: "assets/img/logosoe.png",
+        src: "assets/img/brands/logosoe.png",
         alt: "logo-soe",
         title: "logo-soe",
       }
