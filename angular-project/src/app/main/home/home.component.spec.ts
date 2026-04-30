@@ -48,27 +48,33 @@ describe('HomeComponent', () => {
   });
 
   it('should initialize Typed in ngAfterViewInit when target exists', () => {
+    jest.useFakeTimers();
     component.ngOnInit();
     const target = document.createElement('span');
     const querySpy = jest.spyOn(document, 'querySelector').mockReturnValue(target);
 
     component.ngAfterViewInit();
+    jest.runAllTimers();
 
     expect(Typed).toHaveBeenCalled();
     expect(querySpy).toHaveBeenCalledWith('.typed-element');
 
     querySpy.mockRestore();
+    jest.useRealTimers();
   });
 
   it('should not initialize Typed when target is missing', () => {
+    jest.useFakeTimers();
     component.ngOnInit();
     const querySpy = jest.spyOn(document, 'querySelector').mockReturnValue(null);
 
     component.ngAfterViewInit();
+    jest.runAllTimers();
 
     expect(Typed).not.toHaveBeenCalled();
 
     querySpy.mockRestore();
+    jest.useRealTimers();
   });
 
   it('should unsubscribe on destroy', () => {
