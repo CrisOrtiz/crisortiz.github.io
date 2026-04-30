@@ -36,11 +36,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.typedSub = this.homeContent$.subscribe((content: any) => {
-      this.initTypedWithContent(content);
+      // Allow async-pipe render to flush before querying typed target.
+      setTimeout(() => this.initTypedWithContent(content), 0);
     });
   }
 
-  private initTypedWithContent(content: any) {
+  private initTypedWithContent(content: any, attempts = 0) {
     // destroy previous instance to avoid duplicates/leaks
     if (this.typedInstance) {
       try { this.typedInstance.destroy(); } catch {}
@@ -49,7 +50,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const typedTarget = document.querySelector('.typed-element');
     if (!typedTarget) {
-      // View may not be rendered yet when content arrives.
+      // Retry once on the next tick if the element was not rendered yet.
+      if (attempts < 1) {
+        setTimeout(() => this.initTypedWithContent(content, attempts + 1), 0);
+      }
       return;
     }
 
