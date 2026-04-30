@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import Typed from 'typed.js';
 import { typeoptions } from '../constant';
 import { ContentService } from '../../../services/contentService';
-import { BaseContentComponent } from '../../base-content.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { Observable, Subscription } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 const SECTION_NAME = 'home_section';
 
@@ -17,18 +18,24 @@ const SECTION_NAME = 'home_section';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent extends BaseContentComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   xpYears: number = new Date().getFullYear() - 2020;
+  homeContent$!: Observable<any>;
   private typedInstance?: Typed;
+  private typedSub: Subscription = Subscription.EMPTY;
 
   constructor(
-    contentService: ContentService
-  ) {
-    super(contentService);
-  }
+    private contentService: ContentService
+  ) {}
 
   ngOnInit(): void {
-    this.initContent(SECTION_NAME, (content: any) => {
+    this.homeContent$ = this.contentService.watchContent(SECTION_NAME).pipe(
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+  }
+
+  ngAfterViewInit(): void {
+    this.typedSub = this.homeContent$.subscribe((content: any) => {
       this.initTypedWithContent(content);
     });
   }
@@ -39,12 +46,21 @@ export class HomeComponent extends BaseContentComponent implements OnInit, OnDes
       try { this.typedInstance.destroy(); } catch {}
       this.typedInstance = undefined;
     }
+
+    const typedTarget = document.querySelector('.typed-element');
+    if (!typedTarget) {
+      // View may not be rendered yet when content arrives.
+      return;
+    }
+
     const strings = content?.typedStrings?.length ? content.typedStrings : typeoptions.strings;
-    this.typedInstance = new Typed('.typed-element', { ...typeoptions, strings });
+    this.typedInstance = new Typed(typedTarget as HTMLElement, { ...typeoptions, strings });
   }
 
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
+  ngOnDestroy(): void {
+    if (this.typedSub && !this.typedSub.closed) {
+      this.typedSub.unsubscribe();
+    }
     if (this.typedInstance) {
       try { this.typedInstance.destroy(); } catch {}
     }

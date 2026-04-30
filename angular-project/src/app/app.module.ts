@@ -25,6 +25,8 @@ import { environment } from '../assets/environments/environment';
 // === NEW FIREBASE IMPORTS END ===
 // ... other imports ...
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'; // <-- Import HttpClientModule and HttpClient
+import { inject } from '@angular/core';
+import { FirebaseApp } from '@angular/fire/app';
 
 // <-- ngx-translate imports
 import { TranslateModule } from '@ngx-translate/core';
@@ -39,14 +41,14 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
         CarouselModule,
         NgClickOutsideDirective,
         TranslateModule.forRoot({
-            defaultLanguage: 'en'
+            fallbackLang: 'en'
         })
     ], providers: [
         // === NEW FIREBASE IMPORTS START ===
         provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideFirestore(() => getFirestore()),
-        provideAuth(() => getAuth()), // Add this line for Authentication
-        provideStorage(() => getStorage()),
+        provideFirestore(() => getFirestore(inject(FirebaseApp))),
+        provideAuth(() => getAuth(inject(FirebaseApp))), // Add this line for Authentication
+        provideStorage(() => getStorage(inject(FirebaseApp))),
         // === NEW FIREBASE IMPORTS END ===
         // configure the http loader here (prefix/suffix optional)
         ...provideTranslateHttpLoader({
