@@ -35,12 +35,13 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize language and request initial content on ngOnInit', () => {
+  it('should initialize language on ngOnInit and request content on ngAfterViewInit', () => {
     jest.useFakeTimers();
     const initContentSpy = jest.spyOn(component as any, 'initContent').mockImplementation(() => {});
 
     localStorage.setItem('lang', 'es');
     component.ngOnInit();
+    component.ngAfterViewInit();
     jest.runOnlyPendingTimers();
 
     expect(component.currentLang).toBe('es');
