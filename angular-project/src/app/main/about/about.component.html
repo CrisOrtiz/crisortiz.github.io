@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="content as c">
     <div class="effect-1">
         <img src="assets/img/effect-1.svg" title="" alt="">
     </div>
@@ -14,16 +14,16 @@
         <div class="col-lg-6 col-xl-5 px-lg-5">
             <div class="about-text">
                 <div class="section-heading">
-                    <h6><span>{{ content?.title }}</span></h6>                    
+                    <h6><span>{{ c.title }}</span></h6>                    
                 </div>
-                <p style="text-align: justify;">{{content?.p_1}}</p>
-                <p style="text-align: justify;">{{content?.p_2}}</p>
-                <p style="text-align: justify;">{{content?.p_3}}</p>
-                <p style="text-align: justify; font-weight: bolder;">{{content?.p_4}}</p>
+                <p style="text-align: justify;">{{ c.p_1 }}</p>
+                <p style="text-align: justify;">{{ c.p_2 }}</p>
+                <p style="text-align: justify;">{{ c.p_3 }}</p>
+                <p style="text-align: justify; font-weight: bolder;">{{ c.p_4 }}</p>
                 <div class="review-box">
                     <div class="r-box">
                         <h3>{{ xpYears }}<span>+</span></h3>
-                        <label>{{content?.xpYears}}</label>
+                        <label>{{ c.xpYears }}</label>
                     </div>
                 </div>
             </div>

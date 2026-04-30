@@ -6,6 +6,7 @@ import { ContentService } from 'src/services/contentService';
 export abstract class BaseContentComponent implements OnDestroy {
   public content: any;
   protected contentSub: Subscription = Subscription.EMPTY;
+  private destroyed = false;
 
   constructor(protected contentService: ContentService) {}
 
@@ -16,15 +17,21 @@ export abstract class BaseContentComponent implements OnDestroy {
   protected initContent(sectionName: string, onContentReceived?: (content: any) => void): void {
     this.contentSub = this.contentService.watchContent(sectionName).subscribe(c => {
       if (c) {
-        this.content = c;
-        if (onContentReceived) {
-          onContentReceived(c);
-        }
+        setTimeout(() => {
+          if (this.destroyed) {
+            return;
+          }
+          this.content = c;
+          if (onContentReceived) {
+            onContentReceived(c);
+          }
+        }, 0);
       }
     });
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     if (this.contentSub && !this.contentSub.closed) {
       this.contentSub.unsubscribe();
     }
