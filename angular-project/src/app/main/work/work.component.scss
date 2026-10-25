@@ -1,0 +1,30 @@
+.project-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 140px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--px-theme) 0%, #040C16 100%);
+    i {
+        font-size: 56px;
+        color: var(--px-white);
+    }
+}
+.project-desc {
+    color: var(--px-black);
+    opacity: 0.75;
+    font-size: 14px;
+    margin: 10px 0;
+}
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    span {
+        padding: 3px 10px;
+        border-radius: 30px;
+        background: rgba(var(--px-theme-rgb), 0.12);
+        color: var(--px-black);
+        font-size: 12px;
+    }
+}
