@@ -1,44 +1,40 @@
-<div  class="container">
+<div class="container">
     <div class="row justify-content-between">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="section-heading">
-                <h6><span>My Work</span></h6>
-                <h2>RECENT PROJECT</h2>
+                <h6><span>{{ heading().tag }}</span></h6>
+                <h2>{{ heading().title }} <span>{{ heading().highlight }}</span></h2>
             </div>
         </div>
     </div>
-    <div class="lightbox-gallery">
     <owl-carousel-o [options]="customOptions">
-        @for (id of [1, 2, 3, 4, 5, 6]; track id) {
+        @for (p of items(); track p.name) {
             <ng-template carouselSlide>
-            <div class="project-box">
-                <div class="project-media">
-                <img [src]="'assets/img/popup-project-' + id + '.jpg'" title="" alt="">
-                <a class="gallery-link" 
-                    [href]="'assets/img/popup-project-' + id + '.jpg'" 
-                    [attr.data-title]="'Caption for image ' + id" 
-                    data-lightbox="services">
-                    <i class="bi-plus"></i>
-                </a>
+            <div class="project-box h-100">
+                <div class="project-head">
+                    <i [class]="p.icon" aria-hidden="true"></i>
                 </div>
                 <div class="project-body">
-                <div class="text">
-                    <h5>Website Design</h5>
-                    <span>Web Design, App Design</span>
+                    <div class="text">
+                        <h5>{{ p.name }}</h5>
+                        <span>{{ p.context }}</span>
+                    </div>
+                    @if (p.url) {
+                    <div class="link">
+                        <a class="p-link" [href]="p.url" target="_blank" rel="noopener" [attr.aria-label]="codeLabel() + ': ' + p.name">
+                            <i class="bi-github" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    }
                 </div>
-                <div class="link">
-                    <a class="p-link px_modal" 
-                    data-bs-toggle="modal" 
-                    [attr.data-bs-target]="'#project_' + id">
-                    <i class="bi-arrow-right"></i>
-                    </a>
-                </div>
+                <p class="project-desc">{{ p.desc }}</p>
+                <div class="project-tags">
+                    @for (t of p.stack; track t) {
+                    <span>{{ t }}</span>
+                    }
                 </div>
             </div>
             </ng-template>
-        } @empty {
-            <div class="text-center">No hay proyectos disponibles</div>
         }
     </owl-carousel-o>
-</div>
 </div>

@@ -1,0 +1,23 @@
+.ex-project {
+    font-weight: 600;
+}
+.ex-highlights {
+    color: var(--px-white);
+    opacity: 0.8;
+    padding-left: 1.1rem;
+    li {
+        margin-bottom: 6px;
+    }
+}
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    span {
+        padding: 4px 12px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: var(--px-white);
+        font-size: 12px;
+    }
+}
