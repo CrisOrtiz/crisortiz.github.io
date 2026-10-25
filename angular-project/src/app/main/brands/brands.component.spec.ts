@@ -23,7 +23,7 @@ describe('BrandsComponent', () => {
 
     expect(component.slidesStore).toBeDefined();
     expect(component.slidesStore.length).toBe(5);
-    expect(component.slidesStore[0].src).toBe('assets/img/brands/logoumsa.png');
-    expect(component.slidesStore[4].src).toBe('assets/img/brands/logosoe.png');
+    expect(component.slidesStore[0].src).toBe('assets/img/brands/logoumsa.webp');
+    expect(component.slidesStore[4].src).toBe('assets/img/brands/logosoe.webp');
   });
 });
