@@ -60,12 +60,53 @@
     ]
   }
   </script>
+  <style>
+    #app-loader {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #040C16;
+      transition: opacity .5s ease, visibility .5s ease;
+    }
+    #app-loader.loader-hide { opacity: 0; visibility: hidden; }
+    #app-loader img {
+      width: 110px; height: 110px; object-fit: contain;
+      animation: loader-bounce .9s cubic-bezier(.5, 0, .5, 1) infinite alternate;
+    }
+    #app-loader .loader-shadow {
+      width: 70px; height: 10px; margin-top: 18px; border-radius: 50%;
+      background: rgba(7, 136, 255, .45); filter: blur(3px);
+      animation: loader-shadow .9s cubic-bezier(.5, 0, .5, 1) infinite alternate;
+    }
+    @keyframes loader-bounce {
+      0% { transform: translateY(0) scale(1.08, .92); }
+      15% { transform: translateY(-8px) scale(1, 1); }
+      100% { transform: translateY(-70px) scale(.97, 1.03); }
+    }
+    @keyframes loader-shadow {
+      0% { transform: scale(1); opacity: .9; }
+      100% { transform: scale(.45); opacity: .3; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #app-loader img, #app-loader .loader-shadow { animation: none; }
+    }
+  </style>
 </head>
 <body>
   <noscript>
     <h1>Cristhian Ortiz Mercado, Full Stack Developer</h1>
     <p>Full Stack Developer from La Paz, Bolivia. Contact: cristhianortizmercado@gmail.com</p>
   </noscript>
+  <div id="app-loader" role="status" aria-label="Loading">
+    <img src="assets/img/logo.webp" alt="" width="110" height="110">
+    <div class="loader-shadow"></div>
+  </div>
+  <script>
+    // Safety net: never keep the loader up if the app fails to start
+    setTimeout(function () {
+      var l = document.getElementById('app-loader');
+      if (l) { l.classList.add('loader-hide'); document.documentElement.classList.add('app-ready'); }
+    }, 8000);
+  </script>
   <app-root></app-root>
 </body>
 </html>

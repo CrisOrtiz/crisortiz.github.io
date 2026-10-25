@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common'; //
 import { TranslateModule } from '@ngx-translate/core'; 
 import { ContentService } from '../../../services/contentService'; 
 import { BaseContentComponent } from '../../base-content.component';
+import { RevealDirective } from '../../shared/reveal.directive';
+import { CountUpDirective } from '../../shared/count-up.directive';
 
 const SECTION_NAME = 'about';
 
@@ -10,7 +12,9 @@ const SECTION_NAME = 'about';
     selector: 'app-about',
     imports: [
         CommonModule,
-        TranslateModule
+        TranslateModule,
+        RevealDirective,
+        CountUpDirective
     ],
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.scss']

@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o'; 
 import { options2 } from '../constant';
+import { RevealDirective } from '../../shared/reveal.directive';
 
 @Component({
     selector: 'app-brands',
     imports: [
         CommonModule,
-        CarouselModule
+        CarouselModule,
+        RevealDirective
     ],
     templateUrl: './brands.component.html',
     styleUrls: ['./brands.component.scss']

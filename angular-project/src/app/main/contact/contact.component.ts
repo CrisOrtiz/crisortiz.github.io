@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { RevealDirective } from '../../shared/reveal.directive';
 
 // FormSubmit relays the form to this inbox. The first submission sends an
 // activation email to the address; once confirmed, messages arrive normally.
@@ -21,7 +22,8 @@ export interface ContactMessage {
     imports: [
         CommonModule,
         FormsModule,
-        TranslateModule
+        TranslateModule,
+        RevealDirective
     ],
     templateUrl: './contact.component.html',
     styleUrls: ['./contact.component.scss']
