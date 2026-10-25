@@ -58,7 +58,7 @@ describe('HeaderComponent', () => {
 
     expect(component.currentLang).toBe('es');
     expect(localStorage.getItem('lang')).toBe('es');
-    expect((translateServiceMock.use as jest.Mock)).toHaveBeenCalledWith('es');
+    expect((translateServiceMock.use as jest.Mock)).not.toHaveBeenCalled();
     expect((contentServiceMock.setLanguage as jest.Mock)).toHaveBeenCalledWith('es');
   });
 
