@@ -7,6 +7,7 @@ import { throttleTime } from 'rxjs/operators';
 import { TranslateService, LangChangeEvent, TranslateModule } from '@ngx-translate/core'; 
 import { MainComponent } from './main/main.component';
 import { HeaderComponent } from './header/header.component';
+import { AdminComponent } from './admin/admin.component';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,8 @@ import { HeaderComponent } from './header/header.component';
         CommonModule,
         TranslateModule,
         MainComponent,
-        HeaderComponent
+        HeaderComponent,
+        AdminComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
@@ -22,6 +24,8 @@ import { HeaderComponent } from './header/header.component';
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   public fixedHeader: boolean = false;
   public activeSection: string = 'home';
+  // The content editor lives at /?admin so it works on GitHub Pages without routing
+  public readonly isAdmin = new URLSearchParams(window.location.search).has('admin');
 
   private windowScroll$: Subscription = Subscription.EMPTY;
   private translateSub: Subscription = Subscription.EMPTY;

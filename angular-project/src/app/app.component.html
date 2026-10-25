@@ -1,5 +1,10 @@
-<section [ngClass]="{'fixed-header': fixedHeader}">
-  <app-header [activeSection]="activeSection"></app-header>
-  <app-main></app-main>
-</section>
-
+@if (isAdmin) {
+  @defer {
+    <app-admin></app-admin>
+  }
+} @else {
+  <section [ngClass]="{'fixed-header': fixedHeader}">
+    <app-header [activeSection]="activeSection"></app-header>
+    <app-main></app-main>
+  </section>
+}
