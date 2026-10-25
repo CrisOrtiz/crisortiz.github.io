@@ -62,10 +62,8 @@ export class HeaderComponent extends BaseContentComponent implements OnInit, Aft
   toggleLanguage(): void {
     const next = this.otherLang;
     this.currentLang = next;
-    // update TranslateService and persist
-    this.translate.use(next);
     localStorage.setItem('lang', next);
-    // centralize language change
+    // ContentService fades the page and switches ngx-translate and Firestore texts together
     this.contentService.setLanguage(next);
   }
 

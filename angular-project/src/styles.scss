@@ -12,3 +12,14 @@
 
 
 @import "assets/vendor/bootstrap/icons/bootstrap-icons.css";
+
+// Language switch: ContentService adds .lang-switching while it swaps the texts
+app-main,
+app-header {
+  transition: opacity .15s ease;
+}
+
+html.lang-switching {
+  app-main { opacity: 0; }
+  app-header { opacity: .5; }
+}
