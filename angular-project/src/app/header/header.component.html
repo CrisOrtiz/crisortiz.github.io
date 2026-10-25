@@ -31,11 +31,16 @@
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'project'" href="#project" (click)="fullPageScroll('project')">
-                    {{ content?.education || (currentLang === 'es' ? 'Educacion' : 'Education') }}
+                    {{ content?.projects || (currentLang === 'es' ? 'Proyectos' : 'Projects') }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'services'" href="#services" (click)="fullPageScroll('services')">
+                    {{ content?.education || (currentLang === 'es' ? 'Educacion' : 'Education') }}
+                </a>
+            </li>
+            <li>
+                <a class="menu-item" [class.active]="activeSection === 'experience'" href="#experience" (click)="fullPageScroll('experience')">
                     {{ content?.xp || (currentLang === 'es' ? 'Experiencia' : 'Experience') }}
                 </a>
             </li>
@@ -48,7 +53,7 @@
     
     <!-- Top Menu -->
         <div class="d-flex" (clickOutside)="onClickedOutside($event)">
-            <button class="toggler-menu d-lg-none" [ngClass]="{'open': sidebarOpen}" (click)="toggleMenu()">
+            <button class="toggler-menu d-lg-none" type="button" aria-label="Menu" [attr.aria-expanded]="sidebarOpen" [ngClass]="{'open': sidebarOpen}" (click)="toggleMenu()">
                 <span></span>
             </button>
         </div>
