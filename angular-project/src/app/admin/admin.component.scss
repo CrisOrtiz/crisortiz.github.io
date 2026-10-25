@@ -1,0 +1,97 @@
+.admin {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+  color: #222;
+  background: #fff;
+  min-height: 100vh;
+}
+
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+
+  h1 { font-size: 28px; margin: 0; }
+  .who { display: flex; gap: 12px; align-items: center; font-size: 14px; }
+}
+
+.card {
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  button {
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+
+    &.active { background: #222; color: #fff; border-color: #222; }
+  }
+}
+
+.field {
+  display: block;
+  margin-bottom: 14px;
+
+  .key { display: block; font-family: monospace; font-size: 13px; color: #666; margin-bottom: 4px; }
+  textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font: inherit; resize: vertical; }
+}
+
+.add {
+  display: flex;
+  gap: 8px;
+  input { flex: 1; padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  .check { display: flex; gap: 6px; align-items: center; margin-right: auto; }
+}
+
+.btn-primary {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  cursor: pointer;
+
+  &:disabled { opacity: .5; cursor: default; }
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #0b62c4;
+  cursor: pointer;
+  padding: 4px;
+
+  &:disabled { color: #999; cursor: default; }
+}
+
+.status { margin-top: 16px; font-size: 14px; }

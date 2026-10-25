@@ -1,0 +1,67 @@
+<div class="admin">
+  <header class="admin-top">
+    <h1>Editor de contenido</h1>
+    @if (user()) {
+      <div class="who">
+        <span>{{ user()?.email }}</span>
+        <button type="button" class="btn-link" (click)="logout()">Salir</button>
+      </div>
+    }
+  </header>
+
+  @if (!user()) {
+    <div class="card">
+      <p>Inicia sesión con tu cuenta de Google para editar las secciones del sitio.</p>
+      <button type="button" class="btn-primary" (click)="login()">Entrar con Google</button>
+    </div>
+  } @else if (authorized() === null) {
+    <p>Verificando acceso…</p>
+  } @else if (authorized() === false) {
+    <div class="card">
+      <p>Esta cuenta todavía no tiene permiso de edición.</p>
+      <p>En la consola de Firestore crea el documento <code>admins/{{ user()?.uid }}</code> (puede estar vacío) y recarga esta página.</p>
+    </div>
+  } @else {
+    <div class="toolbar">
+      <div class="tabs">
+        @for (s of sections; track s.id) {
+          <button type="button" [class.active]="section() === s.id" (click)="selectSection(s.id)">{{ s.label }}</button>
+        }
+      </div>
+      <div class="tabs">
+        @for (l of langs; track l.code) {
+          <button type="button" [class.active]="lang() === l.code" (click)="selectLang(l.code)">{{ l.label }}</button>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      @for (f of fields(); track f.key) {
+        <label class="field">
+          <span class="key">{{ f.key }} @if (f.list) { <small>(una línea por elemento)</small> }</span>
+          <textarea [rows]="f.list || f.value.length > 80 ? 4 : 1" [ngModel]="f.value" (ngModelChange)="updateValue(f.key, $event)"></textarea>
+        </label>
+      } @empty {
+        <p>Esta sección no tiene textos en este idioma todavía.</p>
+      }
+
+      <div class="add">
+        <input type="text" placeholder="nuevo_campo" [ngModel]="newKey()" (ngModelChange)="newKey.set($event)">
+        <button type="button" class="btn-link" (click)="addField()">Agregar campo</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <label class="check">
+        <input type="checkbox" [ngModel]="autoTranslate()" (ngModelChange)="autoTranslate.set($event)">
+        Traducir automáticamente a {{ targetLang.toUpperCase() }}
+      </label>
+      <button type="button" class="btn-primary" [disabled]="busy()" (click)="save()">Guardar</button>
+      <button type="button" class="btn-link" [disabled]="busy() || !autoTranslate()" (click)="save(true)">Guardar y retraducir toda la sección</button>
+    </div>
+  }
+
+  @if (status()) {
+    <p class="status">{{ status() }}</p>
+  }
+</div>

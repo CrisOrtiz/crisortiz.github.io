@@ -1,0 +1,49 @@
+name: Translate site content
+
+# Applies the translations queued from the admin page (/?admin) to Firestore.
+# Content is read live from Firestore, so no rebuild or deploy is needed afterwards.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: translate-content
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/translate
+    env:
+      DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - name: Check secrets
+        id: secrets
+        working-directory: .
+        run: |
+          if [ -z "$DEEPL_API_KEY" ] || [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "DEEPL_API_KEY or FIREBASE_SERVICE_ACCOUNT secret is missing, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v6
+        if: steps.secrets.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v5
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version: 22
+
+      - name: Install
+        if: steps.secrets.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Translate pending sections
+        if: steps.secrets.outputs.ready == 'true'
+        run: node translate.mjs

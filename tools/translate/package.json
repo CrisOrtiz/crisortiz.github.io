@@ -1,0 +1,13 @@
+{
+  "name": "content-translate",
+  "private": true,
+  "type": "module",
+  "description": "Translates Firestore section content between EN and ES with DeepL",
+  "scripts": {
+    "translate": "node translate.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}

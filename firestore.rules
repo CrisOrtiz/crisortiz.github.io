@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// Copy into Firebase console > Firestore > Rules (or deploy with the Firebase CLI).
+// Admins are the users with a document at admins/{uid}; create it by hand in the console.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /content/{lang}/sections/{section} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /translation_jobs/{job} {
+      allow read, write: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
