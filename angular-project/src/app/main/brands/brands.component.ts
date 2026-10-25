@@ -20,32 +20,32 @@ export class BrandsComponent implements OnInit {
     this.slidesStore = [
       {
         id : 1,
-        src: "assets/img/brands/logoumsa.png",
-        alt: "logo-umsa",
+        src: "assets/img/brands/logoumsa.webp",
+        alt: "Universidad Mayor de San Andrés",
         title: "logo-umsa",
       },
       {
         id : 2,
-        src: "assets/img/brands/logocba.png",
-        alt: "logo-cba",
+        src: "assets/img/brands/logocba.webp",
+        alt: "Centro Boliviano Americano",
         title: "logo-cba",
       },
       {
         id : 3,
         src: "assets/img/brands/logofunda.jpg",
-        alt: "logo-funda",
+        alt: "Fundación Jala",
         title: "logo-funda",
       },
       {
         id : 4,
-        src: "assets/img/brands/logojalasoft.png",
-        alt: "logo-jalasoft",
+        src: "assets/img/brands/logojalasoft.webp",
+        alt: "Jalasoft",
         title: "logo-jalasoft",
       },
       {
         id : 5,
-        src: "assets/img/brands/logosoe.png",
-        alt: "logo-soe",
+        src: "assets/img/brands/logosoe.webp",
+        alt: "SOE",
         title: "logo-soe",
       }
     ];

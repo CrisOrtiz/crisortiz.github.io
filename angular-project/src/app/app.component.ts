@@ -1,6 +1,5 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { fromEvent, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 
@@ -30,6 +29,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private windowScroll$: Subscription = Subscription.EMPTY;
   private translateSub: Subscription = Subscription.EMPTY;
   private sectionObserver?: IntersectionObserver;
+  private document = inject(DOCUMENT);
 
   constructor(
     private translate: TranslateService,
@@ -39,9 +39,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     const saved = localStorage.getItem('lang');
     const initial = saved || this.translate.getDefaultLang() || 'en';
     this.translate.use(initial);
+    this.document.documentElement.lang = initial;
 
     this.translateSub = this.translate.onLangChange.subscribe((e: LangChangeEvent) => {
       localStorage.setItem('lang', e.lang);
+      this.document.documentElement.lang = e.lang;
       this.cd.markForCheck();
     });
   }
