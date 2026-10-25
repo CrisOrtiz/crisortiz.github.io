@@ -22,6 +22,12 @@
       <p>En la consola de Firestore crea el documento <code>admins/{{ user()?.uid }}</code> (puede estar vacío) y recarga esta página.</p>
     </div>
   } @else {
+    @if (legacyFound()) {
+      <div class="card notice">
+        <p>Hay contenido con la estructura antigua (salute, iam, p_1…). Conviértelo a la nueva estructura de textos completos; los textos se conservan.</p>
+        <button type="button" class="btn-primary" [disabled]="busy()" (click)="migrate()">Migrar contenido</button>
+      </div>
+    }
     <div class="toolbar">
       <div class="tabs">
         @for (s of sections; track s.id) {
@@ -38,7 +44,7 @@
     <div class="card">
       @for (f of fields(); track f.key) {
         <label class="field">
-          <span class="key">{{ f.key }} @if (f.list) { <small>(una línea por elemento)</small> }</span>
+          <span class="key">{{ f.key }} @if (f.hint) { <small>· {{ f.hint }}</small> } @else if (f.list) { <small>· one per line</small> }</span>
           <textarea [rows]="f.list || f.value.length > 80 ? 4 : 1" [ngModel]="f.value" (ngModelChange)="updateValue(f.key, $event)"></textarea>
         </label>
       } @empty {

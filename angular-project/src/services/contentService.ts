@@ -2,10 +2,11 @@ import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, doc, docData } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, combineLatest, merge } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { migrateLegacy, sectionById, withDefaults } from '../app/content-schema';
 
 export const CONTENT_LANGS = ['en', 'es'];
-const CACHE_PREFIX = 'content:';
+const CACHE_PREFIX = 'content-v2:';
 const FADE_MS = 150;
 
 @Injectable({ providedIn: 'root' })
@@ -34,15 +35,22 @@ public currentLang$ = this._lang$.asObservable();
     });
   }
 
+  // Reads content/{lang}/sections/{section}; until the admin migrates the data it falls back to
+  // the old fragmented document and converts it on the fly.
   getContent(lang: string, section: string): Observable<any> {
+    const legacyId = sectionById(section)?.legacyId;
     return runInInjectionContext(this.injector, () => {
-      const ref = doc(this.firestore, `content/${lang}/sections/${section}`);
-      return docData(ref, { idField: 'id' });
+      const current$ = docData(doc(this.firestore, `content/${lang}/sections/${section}`));
+      if (!legacyId) return current$;
+      const legacy$ = docData(doc(this.firestore, `content/${lang}/sections/${legacyId}`));
+      return combineLatest([current$, legacy$]).pipe(
+        map(([current, legacy]) => current ?? (legacy ? migrateLegacy(section, legacy) : undefined))
+      );
     });
   }
 
-  // Emits the section content for the active language. Starts from the last copy saved in
-  // localStorage (no flash of fallback text), and keeps the previous text until the new one exists.
+  // Emits the section content for the active language, starting from the last copy saved in
+  // localStorage. Fields missing in Firestore are filled from CONTENT_DEFAULTS.
   watchContent(section: string): Observable<any> {
     const lang$ = merge(
       this._lang$,
@@ -50,8 +58,7 @@ public currentLang$ = this._lang$.asObservable();
     ).pipe(distinctUntilChanged());
 
     return combineLatest([lang$, this.bothLanguages(section)]).pipe(
-      map(([lang, byLang]) => byLang[lang]),
-      filter(content => !!content),
+      map(([lang, byLang]) => withDefaults(lang, section, byLang[lang])),
       // The cached copy and the live Firestore copy are usually identical: don't re-render for that
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );

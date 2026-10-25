@@ -21,32 +21,32 @@
         <ul class="main-menu">
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'home'" href="#home" (click)="fullPageScroll('home')">
-                    {{ content?.home || (currentLang === 'es' ? 'Inicio' : 'Home') }}
+                    {{ content?.home }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'about'" href="#about" (click)="fullPageScroll('about')"> 
-                    {{ content?.aboutme || (currentLang === 'es' ? 'Sobre mi' : 'About Me') }}
+                    {{ content?.about }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'project'" href="#project" (click)="fullPageScroll('project')">
-                    {{ content?.projects || (currentLang === 'es' ? 'Proyectos' : 'Projects') }}
+                    {{ content?.projects }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'services'" href="#services" (click)="fullPageScroll('services')">
-                    {{ content?.education || (currentLang === 'es' ? 'Educacion' : 'Education') }}
+                    {{ content?.education }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'experience'" href="#experience" (click)="fullPageScroll('experience')">
-                    {{ content?.xp || (currentLang === 'es' ? 'Experiencia' : 'Experience') }}
+                    {{ content?.experience }}
                 </a>
             </li>
             <li>
                 <a class="menu-item" [class.active]="activeSection === 'contact'" href="#contact" (click)="fullPageScroll('contact')">
-                    {{ content?.contact || (currentLang === 'es' ? 'Contacto' : 'Contact') }}
+                    {{ content?.contact }}
                 </a>
             </li>
         </ul>

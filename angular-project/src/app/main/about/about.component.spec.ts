@@ -27,7 +27,7 @@ describe('AboutComponent', () => {
     component.ngOnInit();
     jest.runOnlyPendingTimers();
 
-    expect(initContentSpy).toHaveBeenCalledWith('aboutme_section');
+    expect(initContentSpy).toHaveBeenCalledWith('about');
 
     jest.useRealTimers();
   });

@@ -46,7 +46,7 @@ describe('HeaderComponent', () => {
 
     expect(component.currentLang).toBe('es');
     expect((translateServiceMock.use as jest.Mock)).toHaveBeenCalledWith('es');
-    expect(initContentSpy).toHaveBeenCalledWith('header_section');
+    expect(initContentSpy).toHaveBeenCalledWith('nav');
 
     jest.useRealTimers();
   });

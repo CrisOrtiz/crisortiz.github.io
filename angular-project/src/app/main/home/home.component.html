@@ -4,12 +4,12 @@
         <div class="col-lg-6">
             <div class="hs-text-box">
                 <h6><span>Cristhian Ortiz Mercado</span></h6>
-                <h1 style="font-size: 50px;">{{ content?.salute || 'Hey! I am Cristhian' }}</h1>
-                <h2><span style="font-size: 60px;" >{{ content?.iam || 'I am a ' }} <br>
+                <h1 style="font-size: 50px;">{{ content?.greeting }}</h1>
+                <h2><span style="font-size: 60px;" >{{ content?.headline }} <br>
                 </span><span class="typed-element" style="font-size: 55px;"></span></h2>
-                <p class="text" >{{ content?.fullstackdev || 'Full Stack Developer with ' }}{{ xpYears }}{{ content?.xpyears || '+ years of experience building software solutions.' }}</p>
+                <p class="text" >{{ fill(content?.summary) }}</p>
                 <div class="btn-bar d-flex align-items-sm-center flex-column flex-sm-row">
-                    <span style="color: white;" class="px-lg-1">{{ content?.contactme || 'Contact me' }}: </span>
+                    <span style="color: white;" class="px-lg-1">{{ content?.cta }}: </span>
                     <div class="social-icon ps-sm-4 pt-4 pt-sm-0 d-flex justify-content-center justify-content-sm-start">
                         <a class="linkedin" target="_blank" rel="noopener" aria-label="LinkedIn" href="https://www.linkedin.com/in/cristhian-edwin-ortiz-mercado/"><i class="bi-linkedin" aria-hidden="true"></i></a>
                         <a class="mail" aria-label="E-mail" href="mailto:cristhianortizmercado@gmail.com"><i class="bi-envelope-fill" aria-hidden="true"></i></a>

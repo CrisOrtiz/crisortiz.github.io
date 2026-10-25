@@ -16,14 +16,16 @@
                 <div class="section-heading">
                     <h6><span>{{ c.title }}</span></h6>                    
                 </div>
-                <p style="text-align: justify;">{{ c.p_1 }}</p>
-                <p style="text-align: justify;">{{ c.p_2 }}</p>
-                <p style="text-align: justify;">{{ c.p_3 }}</p>
-                <p style="text-align: justify; font-weight: bolder;">{{ c.p_4 }}</p>
+                @for (paragraph of c.paragraphs; track $index) {
+                    <p style="text-align: justify;">{{ paragraph }}</p>
+                }
+                @if (c.highlight) {
+                    <p style="text-align: justify; font-weight: bolder;">{{ c.highlight }}</p>
+                }
                 <div class="review-box">
                     <div class="r-box">
                         <h3>{{ xpYears }}<span>+</span></h3>
-                        <label>{{ c.xpYears }}</label>
+                        <label>{{ c.yearsLabel }}</label>
                     </div>
                 </div>
             </div>

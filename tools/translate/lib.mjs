@@ -49,3 +49,27 @@ export function applyTranslations(data, keys, translated) {
   }
   return result;
 }
+
+const isBlank = (v) => v === undefined || v === null || (typeof v === 'string' && !v.trim())
+  || (Array.isArray(v) && !v.some(i => typeof i === 'string' && i.trim()));
+
+/** Keys that have text in the source document but are missing or empty in the target. */
+export function missingKeys(source, target) {
+  return Object.keys(source ?? {}).filter(key => !isBlank(source[key]) && isBlank(target?.[key])
+    && (typeof source[key] === 'string' || Array.isArray(source[key])));
+}
+
+const escapeXml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const unescapeXml = (t) => t.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+/**
+ * Wraps {placeholders} in <keep> tags so DeepL (tag_handling=xml, ignore_tags=keep) leaves them alone.
+ * restorePlaceholders undoes it on the translated text.
+ */
+export function protectPlaceholders(text) {
+  return escapeXml(text).replace(/\{(\w+)\}/g, '<keep>{$1}</keep>');
+}
+
+export function restorePlaceholders(text) {
+  return unescapeXml(text.replace(/<keep>(.*?)<\/keep>/g, '$1'));
+}

@@ -2,12 +2,13 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import Typed from 'typed.js';
 import { typeoptions } from '../constant';
+import { fillTemplate } from '../../content-schema';
 import { ContentService } from '../../../services/contentService';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
-const SECTION_NAME = 'home_section';
+const SECTION_NAME = 'home';
 
 @Component({
     selector: 'app-home',
@@ -34,6 +35,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  fill(text: string | undefined): string {
+    return fillTemplate(text, { years: this.xpYears });
+  }
+
   ngAfterViewInit(): void {
     this.typedSub = this.homeContent$.subscribe((content: any) => {
       // Allow async-pipe render to flush before querying typed target.
@@ -57,7 +62,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    const strings = content?.typedStrings?.length ? content.typedStrings : typeoptions.strings;
+    const strings = content?.roles?.length ? content.roles : typeoptions.strings;
     this.typedInstance = new Typed(typedTarget as HTMLElement, { ...typeoptions, strings });
   }
 

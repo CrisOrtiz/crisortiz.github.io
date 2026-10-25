@@ -1,12 +1,17 @@
 # Content editor and automatic translation
 
-Section texts (Home, About, menu) live in Firestore at `content/{es|en}/sections/{section}`.
+Section texts live in Firestore at `content/{es|en}/sections/{home|about|nav}`. Each field is a whole sentence (or a list); `{years}` is filled in by the site. The fields are listed in `angular-project/src/app/content-schema.ts`.
 
 1. Open `https://crisortiz.github.io/?admin`, sign in with Google and edit a section in either language.
 2. On save, the edited fields are queued in `translation_jobs`.
 3. The **Translate site content** GitHub Action runs every 10 minutes (or by hand from the Actions tab),
    translates the queued fields with DeepL and writes them into the other language. The site shows the
    change right away because it reads Firestore live.
+
+Every run also fills any text that exists in one language but is missing or empty in the other.
+
+**Migrating the old structure**: if Firestore still has the old documents (`home_section`, `p_1`, `salute`…),
+the editor shows a **Migrar contenido** button that converts them in place. Until then the site converts them on the fly.
 
 Fields you did not edit are not overwritten, so you can fine-tune a translation by editing the other
 language with "Traducir automáticamente" turned off.

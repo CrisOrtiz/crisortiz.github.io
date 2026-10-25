@@ -6,7 +6,7 @@ import { ContentService } from '../../services/contentService';
 import { BaseContentComponent } from '../base-content.component';
 import { NgClickOutsideModule } from 'ng-click-outside2'; 
 
-const SECTION_NAME = 'header_section';
+const SECTION_NAME = 'nav';
 
 @Component({
     selector: 'app-header',
