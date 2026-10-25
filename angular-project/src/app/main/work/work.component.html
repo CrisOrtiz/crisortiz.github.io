@@ -1,40 +1,37 @@
 <div class="container">
-    <div class="row justify-content-between">
-        <div class="col-lg-6">
-            <div class="section-heading">
-                <h6><span>{{ heading().tag }}</span></h6>
-                <h2>{{ heading().title }} <span>{{ heading().highlight }}</span></h2>
-            </div>
-        </div>
+    <div class="section-heading" appReveal>
+        <h6><span>{{ heading().tag }}</span></h6>
+        <h2>{{ heading().title }} <span>{{ heading().highlight }}</span></h2>
     </div>
+    <div class="pf-carousel">
     <owl-carousel-o [options]="customOptions">
-        @for (p of items(); track p.name) {
+        @for (p of items(); track p.name; let i = $index) {
             <ng-template carouselSlide>
-            <div class="project-box h-100">
-                <div class="project-head">
-                    <i [class]="p.icon" aria-hidden="true"></i>
+            <article class="pf-card" appReveal [revealDelay]="i * 100" [style.--accent]="accents[i % accents.length]">
+                <div class="pf-top">
+                    <div class="pf-icon"><i [class]="p.icon" aria-hidden="true"></i></div>
+                    <span class="pf-context">{{ p.context }}</span>
                 </div>
-                <div class="project-body">
-                    <div class="text">
-                        <h5>{{ p.name }}</h5>
-                        <span>{{ p.context }}</span>
+                <h5>{{ p.name }}</h5>
+                <p class="pf-desc">{{ p.desc }}</p>
+                <div class="pf-foot">
+                    <div class="pf-tags">
+                        @for (t of p.stack.slice(0, maxTags); track t) {
+                        <span>{{ t }}</span>
+                        }
+                        @if (p.stack.length > maxTags) {
+                        <span>+{{ p.stack.length - maxTags }}</span>
+                        }
                     </div>
                     @if (p.url) {
-                    <div class="link">
-                        <a class="p-link" [href]="p.url" target="_blank" rel="noopener" [attr.aria-label]="codeLabel() + ': ' + p.name">
-                            <i class="bi-github" aria-hidden="true"></i>
-                        </a>
-                    </div>
+                    <a class="pf-link" [href]="p.url" target="_blank" rel="noopener" [attr.aria-label]="codeLabel() + ': ' + p.name">
+                        <i class="bi-github" aria-hidden="true"></i>
+                    </a>
                     }
                 </div>
-                <p class="project-desc">{{ p.desc }}</p>
-                <div class="project-tags">
-                    @for (t of p.stack; track t) {
-                    <span>{{ t }}</span>
-                    }
-                </div>
-            </div>
+            </article>
             </ng-template>
         }
     </owl-carousel-o>
+    </div>
 </div>

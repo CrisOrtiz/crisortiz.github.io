@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { options } from '../constant';
+import { RevealDirective } from '../../shared/reveal.directive';
 import { ContentService } from '../../../services/contentService';
 import { EDUCATION, EDUCATION_HEADING, pickLang } from '../profile-data';
 
@@ -11,6 +12,7 @@ import { EDUCATION, EDUCATION_HEADING, pickLang } from '../profile-data';
     imports: [
         CommonModule,
         CarouselModule,
+        RevealDirective
     ],
     templateUrl: './services.component.html',
     styleUrls: ['./services.component.scss']
