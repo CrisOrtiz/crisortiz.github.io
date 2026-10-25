@@ -1,19 +1,21 @@
 <div class="container">
-    <div class="section-heading">
+    <div class="section-heading" appReveal>
         <h6><span>{{ heading().tag }}</span></h6>
         <h2>{{ heading().title }} <span>{{ heading().highlight }}</span></h2>
     </div>
-    <div class="services-carousel">
+    <div class="services-carousel pf-carousel">
         <owl-carousel-o [options]="customOptions">
-            @for (item of items(); track item.title) {
+            @for (item of items(); track item.title; let i = $index) {
                 <ng-template carouselSlide>
-                <div class="services-box">
+                <div class="services-box" appReveal [revealDelay]="i * 100">
+                    <i class="edu-watermark" [class]="item.icon" aria-hidden="true"></i>
+                    <span class="edu-period">{{ item.period }}</span>
                     <div class="services-body">
                     <div class="icon">
                         <i [class]="item.icon" aria-hidden="true"></i>
                     </div>
                     <h5>{{ item.title }}</h5>
-                    <p class="edu-school">{{ item.school }} · {{ item.period }}</p>
+                    <p class="edu-school">{{ item.school }}</p>
                     <p>{{ item.desc }}</p>
                     </div>
                 </div>

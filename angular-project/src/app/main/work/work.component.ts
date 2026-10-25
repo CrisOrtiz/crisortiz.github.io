@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { options } from '../constant';
+import { RevealDirective } from '../../shared/reveal.directive';
 import { ContentService } from '../../../services/contentService';
 import { PROJECTS, PROJECTS_HEADING, pickLang } from '../profile-data';
 
@@ -11,6 +12,7 @@ import { PROJECTS, PROJECTS_HEADING, pickLang } from '../profile-data';
     imports: [
         CommonModule,
         CarouselModule,
+        RevealDirective
     ],
     templateUrl: './work.component.html',
     styleUrls: ['./work.component.scss']
@@ -18,6 +20,8 @@ import { PROJECTS, PROJECTS_HEADING, pickLang } from '../profile-data';
 export class WorkComponent {
   private lang = toSignal(inject(ContentService).currentLang$, { initialValue: 'en' });
   public customOptions: OwlOptions = options;
+  public readonly maxTags = 4;
+  public readonly accents = ['#0788FF', '#7C5CFF', '#00B894', '#FF8A3D', '#E84393', '#00B4D8'];
   public items = computed(() => PROJECTS[pickLang(this.lang())]);
   public heading = computed(() => PROJECTS_HEADING[pickLang(this.lang())]);
   public codeLabel = computed(() => pickLang(this.lang()) === 'es' ? 'Ver código' : 'View code');
