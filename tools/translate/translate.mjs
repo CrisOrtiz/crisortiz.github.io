@@ -3,6 +3,7 @@
 // Each job lives at translation_jobs/{section}_{lang} and lists the fields edited in that language.
 // Those fields are translated with DeepL and merged into the other language's document, so manual
 // tweaks to fields that were not edited are kept.
+// Every run also fills any text that exists in one language but is missing in the other.
 //
 // Usage:
 //   node translate.mjs                         process pending jobs (what the GitHub Action runs)
@@ -11,7 +12,13 @@
 // Env: DEEPL_API_KEY, and FIREBASE_SERVICE_ACCOUNT (service account JSON) or GOOGLE_APPLICATION_CREDENTIALS.
 import { initializeApp, cert, applicationDefault } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { LANGS, applyTranslations, collectTexts, deeplLang, deeplUrl, otherLang } from './lib.mjs';
+import {
+  LANGS, applyTranslations, collectTexts, deeplLang, deeplUrl, missingKeys, otherLang,
+  protectPlaceholders, restorePlaceholders,
+} from './lib.mjs';
+
+// Old fragmented documents, replaced by home/about/nav; never written to
+const LEGACY_SECTIONS = ['home_section', 'aboutme_section', 'header_section'];
 
 const apiKey = process.env.DEEPL_API_KEY;
 if (!apiKey) {
@@ -28,11 +35,17 @@ async function deepl(texts, from, to) {
   const res = await fetch(deeplUrl(apiKey), {
     method: 'POST',
     headers: { 'Authorization': `DeepL-Auth-Key ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: texts, source_lang: deeplLang(from, false), target_lang: deeplLang(to, true) }),
+    body: JSON.stringify({
+      text: texts.map(protectPlaceholders),
+      source_lang: deeplLang(from, false),
+      target_lang: deeplLang(to, true),
+      tag_handling: 'xml',
+      ignore_tags: ['keep'],
+    }),
   });
   if (!res.ok) throw new Error(`DeepL ${res.status}: ${await res.text()}`);
   const body = await res.json();
-  return body.translations.map(t => t.text);
+  return body.translations.map(t => restorePlaceholders(t.text));
 }
 
 async function translateSection(section, from, keys) {
@@ -48,15 +61,29 @@ async function translateSection(section, from, keys) {
   console.log(`${section}: ${from} -> ${to} [${Object.keys(update).join(', ')}]`);
 }
 
+async function fillMissing() {
+  const ids = new Set();
+  for (const lang of LANGS) {
+    const refs = await db.collection(`content/${lang}/sections`).listDocuments();
+    refs.forEach(ref => ids.add(ref.id));
+  }
+  for (const section of ids) {
+    if (LEGACY_SECTIONS.includes(section)) continue;
+    const [en, es] = await Promise.all(LANGS.map(lang => db.doc(`content/${lang}/sections/${section}`).get()));
+    const docs = { en: en.data() ?? {}, es: es.data() ?? {} };
+    for (const from of LANGS) {
+      const keys = missingKeys(docs[from], docs[otherLang(from)]);
+      if (keys.length) await translateSection(section, from, keys);
+    }
+  }
+}
+
 async function processJobs() {
   const jobs = await db.collection('translation_jobs').get();
-  if (jobs.empty) {
-    console.log('No pending translations');
-    return;
-  }
+  if (jobs.empty) console.log('No pending translations');
   for (const job of jobs.docs) {
     const { section, sourceLang, fields } = job.data();
-    if (!section || !LANGS.includes(sourceLang)) {
+    if (!section || !LANGS.includes(sourceLang) || LEGACY_SECTIONS.includes(section)) {
       console.warn(`Skipping malformed job ${job.id}`);
       continue;
     }
@@ -78,4 +105,5 @@ if (sectionArg >= 0) {
   await translateSection(args[sectionArg + 1], from);
 } else {
   await processJobs();
+  await fillMissing();
 }

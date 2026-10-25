@@ -17,9 +17,9 @@ describe('HomeComponent', () => {
 
   const watchContentMock = jest.fn((section: string) =>
     of({
-      salute: 'Hello',
-      iam: 'I am a',
-      typedStrings: ['Developer'],
+      greeting: 'Hello',
+      headline: 'I am a',
+      roles: ['Developer'],
     })
   );
 
@@ -39,10 +39,10 @@ describe('HomeComponent', () => {
   it('should initialize homeContent$ on ngOnInit', (done) => {
     component.ngOnInit();
 
-    expect(watchContentMock).toHaveBeenCalledWith('home_section');
+    expect(watchContentMock).toHaveBeenCalledWith('home');
 
     component.homeContent$.subscribe((value) => {
-      expect(value.salute).toBe('Hello');
+      expect(value.greeting).toBe('Hello');
       done();
     });
   });

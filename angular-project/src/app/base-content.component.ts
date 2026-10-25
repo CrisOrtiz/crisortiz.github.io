@@ -1,10 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ContentService } from 'src/services/contentService';
 
 @Injectable()
 export abstract class BaseContentComponent implements OnDestroy {
-  public content: any;
+  // Backed by a signal so zoneless change detection re-renders when the language changes
+  private readonly contentSignal = signal<any>(undefined);
+  public get content(): any { return this.contentSignal(); }
+  public set content(value: any) { this.contentSignal.set(value); }
   protected contentSub: Subscription = Subscription.EMPTY;
   private destroyed = false;
 

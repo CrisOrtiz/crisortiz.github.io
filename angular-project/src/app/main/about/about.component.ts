@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ContentService } from '../../../services/contentService'; 
 import { BaseContentComponent } from '../../base-content.component';
 
-const SECTION_NAME = 'aboutme_section';
+const SECTION_NAME = 'about';
 
 @Component({
     selector: 'app-about',

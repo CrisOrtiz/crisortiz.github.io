@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { applyTranslations, collectTexts, deeplLang, deeplUrl, otherLang } from './lib.mjs';
+import {
+  applyTranslations, collectTexts, deeplLang, deeplUrl, missingKeys, otherLang, protectPlaceholders, restorePlaceholders,
+} from './lib.mjs';
 
 test('collects trimmed texts from strings and lists, skipping blanks', () => {
   const data = { iam: 'Soy un ', typed: ['Dev', 'Mentor'], empty: '  ', other: 'ignored' };
@@ -29,4 +31,18 @@ test('maps languages for DeepL', () => {
   assert.equal(deeplLang('es', true), 'ES');
   assert.equal(deeplUrl('abc:fx'), 'https://api-free.deepl.com/v2/translate');
   assert.equal(deeplUrl('abc'), 'https://api.deepl.com/v2/translate');
+});
+
+test('finds texts missing or empty in the other language', () => {
+  const en = { greeting: 'Hi', roles: ['Dev'], summary: 'With {years}+ years', cta: 'Contact', count: 3 };
+  const es = { greeting: 'Hola', roles: [], cta: '  ' };
+  assert.deepEqual(missingKeys(en, es), ['roles', 'summary', 'cta']);
+  assert.deepEqual(missingKeys(es, en), []);
+  assert.deepEqual(missingKeys(en, undefined), ['greeting', 'roles', 'summary', 'cta']);
+});
+
+test('protects placeholders and xml characters for DeepL', () => {
+  const protectedText = protectPlaceholders('A & B with {years}+ years <3');
+  assert.equal(protectedText, 'A &amp; B with <keep>{years}</keep>+ years &lt;3');
+  assert.equal(restorePlaceholders('A &amp; B con <keep>{years}</keep>+ años &lt;3'), 'A & B con {years}+ años <3');
 });
