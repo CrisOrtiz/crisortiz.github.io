@@ -5,7 +5,7 @@
     </div>
     <div class="xp-timeline">
         @for (job of visibleItems(); track job.role + job.period; let i = $index) {
-        <div class="xp-item" appReveal="left" [class.open]="openIndex() === i">
+        <div class="xp-item" appReveal [class.open]="openIndex() === i">
             <span class="xp-dot" aria-hidden="true"></span>
             <button class="xp-head" type="button" (click)="toggle(i)"
                     [attr.aria-expanded]="openIndex() === i" [attr.aria-controls]="'xp-details-' + i">

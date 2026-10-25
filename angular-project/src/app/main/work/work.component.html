@@ -7,8 +7,7 @@
     <owl-carousel-o [options]="customOptions">
         @for (p of items(); track p.name; let i = $index) {
             <ng-template carouselSlide>
-            <article class="pf-card" appReveal="zoom" [revealDelay]="i * 100" [style.--accent]="accents[i % accents.length]">
-                <span class="pf-shine" aria-hidden="true"></span>
+            <article class="pf-card" appReveal [revealDelay]="i * 100" [style.--accent]="accents[i % accents.length]">
                 <div class="pf-top">
                     <div class="pf-icon"><i [class]="p.icon" aria-hidden="true"></i></div>
                     <span class="pf-context">{{ p.context }}</span>
