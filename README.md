@@ -1,59 +1,21 @@
-# CrisortizGithubpage
+# CrisOrtizDev portfolio
 
-In Feb 2025 I renew my personal portfolio page using Angular and Firebase trying to make my own site more dynamic and modern.
+Personal portfolio of Cristhian Ortiz Mercado, published at https://crisortiz.github.io.
 
-Greetings Cristhian Ortiz Mercado
+The site is an Angular 20 app in `angular-project/`. Pushing to `master` runs the Jest tests, builds the app, and deploys the build to the `prod` branch, which GitHub Pages serves.
 
-Angular version = 19.1.6.
+## Editing content
 
-## Development server
+- Experience, education and projects (EN/ES): `angular-project/src/app/main/profile-data.ts`
+- Home, About and menu labels: Firestore, under `content/{lang}/sections/{section}`
+- SEO tags, link preview and structured data: `angular-project/src/index.html`, plus `robots.txt` and `sitemap.xml`
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Development
 
 ```bash
-ng generate component component-name
+cd angular-project
+npm install --legacy-peer-deps
+npm start            # dev server at http://localhost:4200
+npx jest             # unit tests
+npm run build:prod   # production build in dist/
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
