@@ -1,3 +1,42 @@
-.contact-info a {
-    overflow-wrap: anywhere;
+.contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    color: var(--px-white);
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    min-width: 0;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+    small {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0.6;
+    }
+    &:hover {
+        color: var(--px-white);
+        border-color: var(--px-theme);
+        transform: translateX(4px);
+    }
+}
+.contact-icon {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--px-theme);
+    font-size: 18px;
 }

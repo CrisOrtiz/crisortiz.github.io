@@ -1,16 +1,11 @@
 <div class="container">
     <div class="contactus-box rounded oveflow-hidden gray-bg">
-        <div class="row g-0 p-4 p-lg-5">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-8">
-                <div class="contactus-title">
-                    <h5>Let’s Discuss Your Project</h5>
-                    <p class="m-0">Always available for freelancing if the right project comes along, Feel free to contact me.</p>
-                </div>
-            </div>
+        <div class="contactus-title p-4 p-lg-5 pb-lg-4">
+            <h5>Let’s Discuss Your Project</h5>
+            <p class="m-0">Always available for freelancing if the right project comes along. Feel free to contact me.</p>
         </div>
-        <div class="row g-0 contactus-form p-4 p-lg-5 flex-row-reverse">
-            <div class="col-lg-8">
+        <div class="row g-0 contactus-form p-4 p-lg-5 flex-column-reverse flex-lg-row-reverse">
+            <div class="col-lg-7">
                 <div class="contact-form">
                     <form id="contact-form" #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" novalidate>
                         <input type="text" name="_honey" [(ngModel)]="honey" class="d-none" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -69,19 +64,22 @@
                     </form>
                 </div>
             </div>
-            <div class="col-lg-4 pe-md-5">
-                <div class="contact-banner d-none d-lg-block">
-                    <img src="assets/img/contact-us.png" title="" alt="">
-                </div>
-                <div class="contact-info">
-                    <div class="contact-info-in">
-                        <label>write an e-mail</label>
-                        <a href="mailto:cristhianortizmercado@gmail.com">cristhianortizmercado&#64;gmail.com</a>
-                    </div>
-                    <div class="contact-info-in">
-                        <label>Send a message</label>
-                        <a href="https://wa.me/59160633789" target="_blank">+59160633789</a>
-                    </div>
+            <div class="col-lg-5 pe-lg-5 mb-4 mb-lg-0">
+                <div class="contact-list">
+                    <a class="contact-item" href="mailto:cristhianortizmercado@gmail.com">
+                        <span class="contact-icon"><i class="bi-envelope-fill" aria-hidden="true"></i></span>
+                        <span>
+                            <small>E-mail</small>
+                            cristhianortizmercado<wbr>&#64;gmail.com
+                        </span>
+                    </a>
+                    <a class="contact-item" href="https://wa.me/59160633789" target="_blank" rel="noopener">
+                        <span class="contact-icon"><i class="bi-whatsapp" aria-hidden="true"></i></span>
+                        <span>
+                            <small>WhatsApp</small>
+                            +591 60633789
+                        </span>
+                    </a>
                 </div>
                 <div class="social-icon">
                     <a class="facebook" href="https://www.facebook.com/cristhian.ortiz.mercado" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
