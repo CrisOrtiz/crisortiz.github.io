@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container" appReveal>
     <owl-carousel-o [options]="customOptions2">
         @for (slide of slidesStore; track slide.src) {
             <ng-template carouselSlide>
             <div class="p-3 text-center d-flex align-items-center justify-content-center" 
                 style="height: 250px; width: 100%;">
-                <img [src]="slide.src"  
+                <img class="brand-logo" [src]="slide.src"  
                     [alt]="slide.alt" 
                     [title]="slide.title"
                     style="object-fit: contain; max-width: 100%; max-height: 100%;">

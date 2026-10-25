@@ -55,6 +55,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.hideLoader();
     const sectionIds = ['home', 'about', 'project', 'services', 'experience', 'contact'];
     const options = {
       root: null,
@@ -79,6 +80,21 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sectionObserver?.observe(section);
       }
     });
+  }
+
+  // Keeps the bouncing logo up for a short minimum so it does not just flash
+  private hideLoader(minVisibleMs = 900) {
+    const loader = this.document.getElementById('app-loader');
+    if (!loader) {
+      this.document.documentElement.classList.add('app-ready');
+      return;
+    }
+    const wait = Math.max(0, minVisibleMs - performance.now());
+    setTimeout(() => {
+      loader.classList.add('loader-hide');
+      this.document.documentElement.classList.add('app-ready');
+      setTimeout(() => loader.remove(), 600);
+    }, wait);
   }
 
   // CAMBIO: Se añadió 'override' o simplemente se asegura su ejecución correcta

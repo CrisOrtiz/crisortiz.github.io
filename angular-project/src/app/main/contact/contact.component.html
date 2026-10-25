@@ -1,12 +1,12 @@
 <div class="container">
     <div class="contactus-box rounded oveflow-hidden gray-bg">
-        <div class="contactus-title p-4 p-lg-5 pb-lg-4">
+        <div class="contactus-title p-4 p-lg-5 pb-lg-4" appReveal>
             <h5>Let’s Discuss Your Project</h5>
             <p class="m-0">Always available for freelancing if the right project comes along. Feel free to contact me.</p>
         </div>
         <div class="row g-0 contactus-form p-4 p-lg-5 flex-column-reverse flex-lg-row-reverse">
             <div class="col-lg-7">
-                <div class="contact-form">
+                <div class="contact-form" appReveal="right" [revealDelay]="150">
                     <form id="contact-form" #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" novalidate>
                         <input type="text" name="_honey" [(ngModel)]="honey" class="d-none" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <div class="row gx-3 gy-4">
@@ -64,7 +64,7 @@
                     </form>
                 </div>
             </div>
-            <div class="col-lg-5 pe-lg-5 mb-4 mb-lg-0">
+            <div class="col-lg-5 pe-lg-5 mb-4 mb-lg-0" appReveal="left">
                 <div class="contact-list">
                     <a class="contact-item" href="mailto:cristhianortizmercado@gmail.com">
                         <span class="contact-icon"><i class="bi-envelope-fill" aria-hidden="true"></i></span>
