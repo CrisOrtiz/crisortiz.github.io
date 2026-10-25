@@ -7,12 +7,12 @@
     </div>
     <div class="row align-items-center justify-content-center gy-5">
         <div class="col-lg-6 col-xl-5">
-            <div class="about-banner text-center" appReveal="left">
+            <div class="about-banner text-center">
                 <img src="assets/img/about-me.webp" alt="Cristhian Ortiz Mercado" width="543" height="663" loading="lazy" style="height: auto;">
             </div>
         </div>
         <div class="col-lg-6 col-xl-5 px-lg-5">
-            <div class="about-text" appReveal="right" [revealDelay]="150">
+            <div class="about-text">
                 <div class="section-heading">
                     <h6><span>{{ c.title }}</span></h6>                    
                 </div>
@@ -24,7 +24,7 @@
                 }
                 <div class="review-box">
                     <div class="r-box">
-                        <h3><span [appCountUp]="xpYears"></span><span>+</span></h3>
+                        <h3>{{ xpYears }}<span>+</span></h3>
                         <label>{{ c.yearsLabel }}</label>
                     </div>
                 </div>
