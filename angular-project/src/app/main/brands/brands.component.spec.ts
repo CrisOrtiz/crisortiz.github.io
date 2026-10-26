@@ -26,4 +26,21 @@ describe('BrandsComponent', () => {
     expect(component.slidesStore[0].src).toBe('assets/img/brands/logoumsa.webp');
     expect(component.slidesStore[4].src).toBe('assets/img/brands/logosoe.webp');
   });
+
+  it('should give wide and tall logos the same visible area', () => {
+    const fit = (naturalWidth: number, naturalHeight: number) => {
+      const slide: any = {};
+      component.fitLogo(slide, { target: { naturalWidth, naturalHeight } } as any);
+      return slide;
+    };
+
+    const square = fit(180, 180);
+    const tall = fit(87, 180);
+    expect(square.width).toBe(square.height);
+    expect(Math.abs(square.width * square.height - tall.width * tall.height)).toBeLessThan(250);
+
+    const wide = fit(320, 68);
+    expect(wide.width).toBeLessThanOrEqual(170);
+    expect(wide.height).toBe(Math.round(wide.width * 68 / 320));
+  });
 });
