@@ -13,9 +13,8 @@
                     (click)="toggleLanguage()"
                     type="button"
                     [attr.aria-label]="'Current language: ' + currentLang + '. Switch to: ' + otherLang">
-                <span class="d-sm-inline d-lg-none small me-2" style="font-size: xx-small;">Switch:</span>
-                <img class="flag-icon" [src]="'assets/flags/' + currentLang + '.svg'" [alt]="currentLang + ' flag'" style="max-width: 60%;">
-                <span class="d-sm-inline d-lg-none ms-2">{{ currentLang.toUpperCase() }}</span>
+                <img class="flag-icon" [src]="'assets/flags/' + currentLang + '.svg'" [alt]="currentLang + ' flag'">
+                <span class="ms-2">{{ currentLang.toUpperCase() }}</span>
             </button>
         </div>
         <ul class="main-menu">

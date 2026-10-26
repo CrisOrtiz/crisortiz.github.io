@@ -1,7 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ContentService } from '../../../services/contentService';
+import { CONTACT, pickLang } from '../profile-data';
 
 // FormSubmit relays the form to this inbox. The first submission sends an
 // activation email to the address; once confirmed, messages arrive normally.
@@ -27,6 +30,8 @@ export interface ContactMessage {
     styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent {
+  private lang = toSignal(inject(ContentService).currentLang$, { initialValue: 'en' });
+  public t = computed(() => CONTACT[pickLang(this.lang())]);
   public model: ContactMessage = { name: '', email: '', subject: '', message: '' };
   // Honeypot field: bots fill it, people never see it.
   public honey = '';
