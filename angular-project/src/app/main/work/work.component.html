@@ -3,11 +3,11 @@
         <h6><span>{{ heading().tag }}</span></h6>
         <h2>{{ heading().title }} <span>{{ heading().highlight }}</span></h2>
     </div>
-    <div class="pf-carousel">
+    <div class="pf-carousel" appReveal>
     <owl-carousel-o [options]="customOptions">
         @for (p of items(); track p.name; let i = $index) {
             <ng-template carouselSlide>
-            <article class="pf-card" appReveal [revealDelay]="i * 100" [style.--accent]="accents[i % accents.length]">
+            <article class="pf-card" [style.--accent]="accents[i % accents.length]">
                 <div class="pf-top">
                     <div class="pf-icon"><i [class]="p.icon" aria-hidden="true"></i></div>
                     <span class="pf-context">{{ p.context }}</span>
@@ -20,7 +20,18 @@
                         <span>{{ t }}</span>
                         }
                         @if (p.stack.length > maxTags) {
-                        <span>+{{ p.stack.length - maxTags }}</span>
+                        <button #moreBtn class="pf-more" type="button" [attr.popovertarget]="'pf-more-' + i"
+                                [attr.aria-label]="labels().more + ': ' + p.stack.slice(maxTags).join(', ')">
+                            +{{ p.stack.length - maxTags }}
+                        </button>
+                        <div class="pf-popover" popover [id]="'pf-more-' + i" (beforetoggle)="placePopover($event, moreBtn)">
+                            <p class="pf-popover-title">{{ labels().more }}</p>
+                            <div class="pf-tags">
+                                @for (t of p.stack.slice(maxTags); track t) {
+                                <span>{{ t }}</span>
+                                }
+                            </div>
+                        </div>
                         }
                     </div>
                     @if (p.url) {

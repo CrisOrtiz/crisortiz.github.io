@@ -5,6 +5,11 @@ import { RevealDirective } from '../../shared/reveal.directive';
 import { ContentService } from '../../../services/contentService';
 import { PROJECTS, PROJECTS_HEADING, pickLang } from '../profile-data';
 
+/** Width the "+N" popover is laid out with (see .pf-popover in _portfolio.scss). */
+const POPOVER_WIDTH = 240;
+const POPOVER_GAP = 8;
+const VIEWPORT_PADDING = 16;
+
 @Component({
     selector: 'app-work',
     imports: [
@@ -22,4 +27,20 @@ export class WorkComponent {
   public items = computed(() => PROJECTS[pickLang(this.lang())]);
   public heading = computed(() => PROJECTS_HEADING[pickLang(this.lang())]);
   public codeLabel = computed(() => pickLang(this.lang()) === 'es' ? 'Ver código' : 'View code');
+  public labels = computed(() => pickLang(this.lang()) === 'es'
+    ? { more: 'Más tecnologías' }
+    : { more: 'More technologies' });
+
+  /** Opens the hidden-technologies popover just below its "+N" button, kept inside the viewport. */
+  placePopover(event: Event, button: HTMLElement): void {
+    if ((event as ToggleEvent).newState !== 'open') {
+      return;
+    }
+    const popover = event.target as HTMLElement;
+    const rect = button.getBoundingClientRect();
+    const maxLeft = window.innerWidth - POPOVER_WIDTH - VIEWPORT_PADDING;
+    const left = Math.max(VIEWPORT_PADDING, Math.min(rect.left, maxLeft));
+    popover.style.top = `${rect.bottom + window.scrollY + POPOVER_GAP}px`;
+    popover.style.left = `${left + window.scrollX}px`;
+  }
 }
