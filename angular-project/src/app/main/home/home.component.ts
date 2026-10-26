@@ -39,6 +39,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return fillTemplate(text, { years: this.xpYears });
   }
 
+  // The typed text sits over an invisible copy of the longest role, so the
+  // hero keeps its height while the words are typed and deleted.
+  longestRole(roles: string[] | undefined): string {
+    const list = roles?.length ? roles : typeoptions.strings;
+    return list.reduce((a, b) => (b.length > a.length ? b : a), '');
+  }
+
   ngAfterViewInit(): void {
     this.typedSub = this.homeContent$.subscribe((content: any) => {
       // Allow async-pipe render to flush before querying typed target.
