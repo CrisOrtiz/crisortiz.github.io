@@ -1,0 +1,16 @@
+.brand-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+  width: 100%;
+  padding: 1rem;
+
+  img {
+    // Owl sets img { width: 100% }; the size comes from fitLogo instead.
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
