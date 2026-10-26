@@ -11,10 +11,7 @@ export const options = {
       0: {
         items: 1
       },
-      400: {
-        items: 2
-      },
-      740: {
+      576: {
         items: 2
       },
       940: {

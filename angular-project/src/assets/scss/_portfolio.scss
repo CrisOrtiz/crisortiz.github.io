@@ -345,3 +345,26 @@
         opacity: 0.3;
     }
 }
+
+// Language switch: compact flag + code pill
+.lang-cta {
+    height: 40px;
+    gap: 0;
+    white-space: nowrap;
+    border-radius: 999px;
+    .flag-icon {
+        width: 26px;
+        height: 18px;
+        object-fit: cover;
+        border-radius: 3px;
+    }
+}
+
+// Keep section headings clear of the fixed header on anchor jumps
+.spy-section {
+    scroll-margin-top: 70px;
+}
+
+.section-heading h2 {
+    line-height: 1.15;
+}

@@ -423,6 +423,46 @@ export const PROJECTS: Record<Lang, ProjectItem[]> = {
   ]
 };
 
+export interface ContactCopy {
+  title: string;
+  text: string;
+  name: string; namePh: string; nameError: string;
+  email: string; emailPh: string; emailError: string;
+  subject: string; subjectPh: string; subjectError: string;
+  message: string; messagePh: string; messageError: string;
+  send: string; sending: string; sent: string; error: string;
+}
+
+export const CONTACT: Record<Lang, ContactCopy> = {
+  en: {
+    title: 'Let’s Discuss Your Project',
+    text: 'Always available for freelancing if the right project comes along. Feel free to contact me.',
+    name: 'Name', namePh: 'Name *', nameError: 'Please enter your name.',
+    email: 'Your email', emailPh: 'Email *', emailError: 'Please enter a valid email.',
+    subject: 'Subject', subjectPh: 'Subject *', subjectError: 'Please enter a subject.',
+    message: 'Your message', messagePh: 'Your message *', messageError: 'Please write a message.',
+    send: 'Send message', sending: 'Sending...',
+    sent: 'Thanks! Your message was sent, I will reply soon.',
+    error: 'The message could not be sent. Please write to'
+  },
+  es: {
+    title: 'Hablemos de tu proyecto',
+    text: 'Siempre disponible para trabajos freelance si llega el proyecto indicado. No dudes en contactarme.',
+    name: 'Nombre', namePh: 'Nombre *', nameError: 'Por favor escribe tu nombre.',
+    email: 'Tu correo', emailPh: 'Correo *', emailError: 'Por favor escribe un correo válido.',
+    subject: 'Asunto', subjectPh: 'Asunto *', subjectError: 'Por favor escribe un asunto.',
+    message: 'Tu mensaje', messagePh: 'Tu mensaje *', messageError: 'Por favor escribe un mensaje.',
+    send: 'Enviar mensaje', sending: 'Enviando...',
+    sent: '¡Gracias! Tu mensaje fue enviado, te responderé pronto.',
+    error: 'No se pudo enviar el mensaje. Escríbeme a'
+  }
+};
+
+export const FOOTER: Record<Lang, string> = {
+  en: 'All rights reserved',
+  es: 'Todos los derechos reservados'
+};
+
 export function pickLang(lang: string | null | undefined): Lang {
   return lang === 'es' ? 'es' : 'en';
 }
