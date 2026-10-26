@@ -4,9 +4,12 @@
         <div class="col-lg-6">
             <div class="hs-text-box">
                 <h6><span>Cristhian Ortiz Mercado</span></h6>
-                <h1 style="font-size: 50px;">{{ content?.greeting }}</h1>
-                <h2><span style="font-size: 60px;" >{{ content?.headline }} <br>
-                </span><span class="typed-element" style="font-size: 55px;"></span></h2>
+                <h1 class="hero-greeting">{{ content?.greeting }}</h1>
+                <h2><span class="hero-headline">{{ content?.headline }} <br>
+                </span><span class="typed-box">
+                    <span class="typed-ghost" aria-hidden="true">{{ longestRole(content?.roles) }}|</span>
+                    <span class="typed-live"><span class="typed-element"></span></span>
+                </span></h2>
                 <p class="text" >{{ fill(content?.summary) }}</p>
                 <div class="btn-bar d-flex align-items-sm-center flex-column flex-sm-row">
                     <span style="color: white;" class="px-lg-1">{{ content?.cta }}: </span>

@@ -1,0 +1,13 @@
+.typed-box {
+    display: inline-grid;
+    > * {
+        grid-area: 1 / 1;
+    }
+}
+.typed-ghost {
+    visibility: hidden;
+}
+// Scale the hero text down on phones so long words like "Desarrollador" fit
+.hs-text-box h1.hero-greeting { font-size: clamp(32px, 8.5vw, 50px); }
+.hs-text-box .hero-headline { font-size: clamp(36px, 10vw, 60px); }
+.hs-text-box .typed-box { font-size: clamp(34px, 9vw, 55px); }
