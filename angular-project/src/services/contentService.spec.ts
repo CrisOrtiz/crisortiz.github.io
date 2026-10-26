@@ -1,14 +1,16 @@
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { TranslateService } from '@ngx-translate/core';
+import { TestBed } from '@angular/core/testing';
+import { FIRESTORE } from '../app/firebase';
 import { ContentService } from './contentService';
 
 describe('ContentService', () => {
   let docs: Record<string, Subject<any>>;
   let service: ContentService;
   const translateMock = {
-    currentLang: 'en',
-    getDefaultLang: () => 'en',
+    getCurrentLang: () => 'en',
+    getFallbackLang: () => 'en',
     use: jest.fn(),
     onLangChange: new Subject<any>(),
   } as unknown as TranslateService;
@@ -17,7 +19,14 @@ describe('ContentService', () => {
     localStorage.clear();
     jest.useFakeTimers();
     docs = { en: new Subject(), es: new Subject() };
-    service = new ContentService({} as any, translateMock, {} as any);
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: FIRESTORE, useValue: {} },
+        { provide: TranslateService, useValue: translateMock },
+      ]
+    });
+    service = TestBed.inject(ContentService);
     jest.spyOn(service, 'getContent').mockImplementation((lang: string) => docs[lang].asObservable());
   });
 
@@ -33,6 +42,7 @@ describe('ContentService', () => {
     expect(seen.slice(-2)).toEqual([{ salute: 'Hi' }, { salute: 'Hola' }]);
     expect(service.getContent).toHaveBeenCalledTimes(2);
     expect(translateMock.use).toHaveBeenCalledWith('es');
+    expect(service.lang()).toBe('es');
   });
 
   it('starts from the copy cached in localStorage', () => {

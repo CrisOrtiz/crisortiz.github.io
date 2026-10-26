@@ -1,5 +1,6 @@
-import { of } from 'rxjs';
+import { signal } from '@angular/core';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { TestBed } from '@angular/core/testing';
 
 import { AboutComponent } from './about.component';
 import { ContentService } from '../../../services/contentService';
@@ -8,28 +9,21 @@ describe('AboutComponent', () => {
   let component: AboutComponent;
 
   const contentServiceMock = {
-    watchContent: jest.fn(() => of({ title: 'About' })),
-  } as unknown as ContentService;
+    contentSignal: jest.fn((section: string) => signal({ title: 'About' })),
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    component = new AboutComponent(contentServiceMock);
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [{ provide: ContentService, useValue: contentServiceMock }]
+    });
+    component = TestBed.runInInjectionContext(() => new AboutComponent());
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize content on ngOnInit after timer', () => {
-    jest.useFakeTimers();
-    const initContentSpy = jest.spyOn(component as any, 'initContent').mockImplementation(() => {});
-
-    component.ngOnInit();
-    jest.runOnlyPendingTimers();
-
-    expect(initContentSpy).toHaveBeenCalledWith('about');
-
-    jest.useRealTimers();
+  it('should read the about section content', () => {
+    expect(contentServiceMock.contentSignal).toHaveBeenCalledWith('about');
+    expect(component.content().title).toBe('About');
   });
 
   it('should compute xpYears based on current year', () => {

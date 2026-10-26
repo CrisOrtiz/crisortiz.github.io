@@ -60,7 +60,7 @@
     <div class="actions">
       <label class="check">
         <input type="checkbox" [ngModel]="autoTranslate()" (ngModelChange)="autoTranslate.set($event)">
-        Traducir automáticamente a {{ targetLang.toUpperCase() }}
+        Traducir automáticamente a {{ targetLang().toUpperCase() }}
       </label>
       <button type="button" class="btn-primary" [disabled]="busy()" (click)="save()">Guardar</button>
       <button type="button" class="btn-link" [disabled]="busy() || !autoTranslate()" (click)="save(true)">Guardar y retraducir toda la sección</button>

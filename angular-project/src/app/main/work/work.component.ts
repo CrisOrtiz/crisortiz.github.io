@@ -1,6 +1,4 @@
 import { Component, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { options } from '../constant';
 import { RevealDirective } from '../../shared/reveal.directive';
@@ -10,7 +8,6 @@ import { PROJECTS, PROJECTS_HEADING, pickLang } from '../profile-data';
 @Component({
     selector: 'app-work',
     imports: [
-        CommonModule,
         CarouselModule,
         RevealDirective
     ],
@@ -18,7 +15,7 @@ import { PROJECTS, PROJECTS_HEADING, pickLang } from '../profile-data';
     styleUrls: ['./work.component.scss']
 })
 export class WorkComponent {
-  private lang = toSignal(inject(ContentService).currentLang$, { initialValue: 'en' });
+  private lang = inject(ContentService).lang;
   public customOptions: OwlOptions = options;
   public readonly maxTags = 4;
   public readonly accents = ['#0788FF', '#7C5CFF', '#00B894', '#FF8A3D', '#E84393', '#00B4D8'];

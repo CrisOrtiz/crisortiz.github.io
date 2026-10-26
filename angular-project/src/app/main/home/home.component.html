@@ -1,18 +1,18 @@
-@let content = (homeContent$ | async);
+@let c = content();
 <div class="container">
     <div class="row align-items-center">
         <div class="col-lg-6">
             <div class="hs-text-box">
                 <h6><span>Cristhian Ortiz Mercado</span></h6>
-                <h1 class="hero-greeting">{{ content?.greeting }}</h1>
-                <h2><span class="hero-headline">{{ content?.headline }} <br>
+                <h1 class="hero-greeting">{{ c?.greeting }}</h1>
+                <h2><span class="hero-headline">{{ c?.headline }} <br>
                 </span><span class="typed-box">
-                    <span class="typed-ghost" aria-hidden="true">{{ longestRole(content?.roles) }}|</span>
-                    <span class="typed-live"><span class="typed-element"></span></span>
+                    <span class="typed-ghost" aria-hidden="true">{{ longestRole() }}|</span>
+                    <span class="typed-live"><span class="typed-element" #typed></span></span>
                 </span></h2>
-                <p class="text" >{{ fill(content?.summary) }}</p>
+                <p class="text" >{{ fill(c?.summary) }}</p>
                 <div class="btn-bar d-flex align-items-sm-center flex-column flex-sm-row">
-                    <span style="color: white;" class="px-lg-1">{{ content?.cta }}: </span>
+                    <span style="color: white;" class="px-lg-1">{{ c?.cta }}: </span>
                     <div class="social-icon ps-sm-4 pt-4 pt-sm-0 d-flex justify-content-center justify-content-sm-start">
                         <a class="linkedin" target="_blank" rel="noopener" aria-label="LinkedIn" href="https://www.linkedin.com/in/cristhian-edwin-ortiz-mercado/"><i class="bi-linkedin" aria-hidden="true"></i></a>
                         <a class="mail" aria-label="E-mail" href="mailto:cristhianortizmercado@gmail.com"><i class="bi-envelope-fill" aria-hidden="true"></i></a>

@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { signal } from '@angular/core';
 import { describe, expect, it } from '@jest/globals';
 import { TestBed } from '@angular/core/testing';
 
@@ -9,12 +9,12 @@ import { EXPERIENCE } from '../profile-data';
 describe('ExperienceComponent', () => {
   const setup = (lang = 'en') => {
     TestBed.resetTestingModule();
-    const lang$ = new BehaviorSubject<string>(lang);
+    const currentLang = signal(lang);
     TestBed.configureTestingModule({
-      providers: [{ provide: ContentService, useValue: { currentLang$: lang$.asObservable() } }]
+      providers: [{ provide: ContentService, useValue: { lang: currentLang.asReadonly() } }]
     });
     const component = TestBed.runInInjectionContext(() => new ExperienceComponent());
-    return { component, lang$ };
+    return { component, currentLang };
   };
 
   it('should show the first jobs and expand to all of them', () => {
@@ -36,9 +36,9 @@ describe('ExperienceComponent', () => {
   });
 
   it('should switch content with the language', () => {
-    const { component, lang$ } = setup();
+    const { component, currentLang } = setup();
 
-    lang$.next('es');
+    currentLang.set('es');
     expect(component.items()).toBe(EXPERIENCE.es);
     expect(component.labels().more).toBe('Ver toda la experiencia');
   });

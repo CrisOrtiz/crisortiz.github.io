@@ -18,9 +18,7 @@ describe('BrandsComponent', () => {
     expect(component.customOptions2).toBe(options2);
   });
 
-  it('should initialize slides on ngOnInit', () => {
-    component.ngOnInit();
-
+  it('should list the brand slides', () => {
     expect(component.slidesStore).toBeDefined();
     expect(component.slidesStore.length).toBe(5);
     expect(component.slidesStore[0].src).toBe('assets/img/brands/logoumsa.webp');
@@ -29,9 +27,9 @@ describe('BrandsComponent', () => {
 
   it('should give wide and tall logos the same visible area', () => {
     const fit = (naturalWidth: number, naturalHeight: number) => {
-      const slide: any = {};
+      const slide = component.slidesStore[0];
       component.fitLogo(slide, { target: { naturalWidth, naturalHeight } } as any);
-      return slide;
+      return component.sizes()[slide.src]!;
     };
 
     const square = fit(180, 180);

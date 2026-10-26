@@ -2,7 +2,7 @@
 
 Personal portfolio of Cristhian Ortiz Mercado, published at https://crisortiz.github.io.
 
-The site is an Angular 20 app in `angular-project/`. Pushing to `master` runs the Jest tests, builds the app, and deploys the build to the `prod` branch, which GitHub Pages serves.
+The site is an Angular 22 app (standalone components, signals, zoneless) in `angular-project/`. Pushing to `master` runs the Jest tests, builds the app, and deploys the build to the `prod` branch, which GitHub Pages serves.
 
 ## Editing content
 

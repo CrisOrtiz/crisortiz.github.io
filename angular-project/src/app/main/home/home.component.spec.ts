@@ -1,5 +1,6 @@
-import { of, Subscription } from 'rxjs';
+import { signal } from '@angular/core';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { TestBed } from '@angular/core/testing';
 
 import Typed from 'typed.js';
 import { HomeComponent } from './home.component';
@@ -13,79 +14,60 @@ jest.mock('typed.js', () => ({
 }));
 
 describe('HomeComponent', () => {
-  let component: HomeComponent;
-
-  const watchContentMock = jest.fn((section: string) =>
-    of({
-      greeting: 'Hello',
-      headline: 'I am a',
-      roles: ['Developer'],
-    })
-  );
-
+  const content = signal<any>(undefined);
   const contentServiceMock = {
-    watchContent: watchContentMock,
-  } as unknown as ContentService;
+    contentSignal: jest.fn((section: string) => content.asReadonly()),
+  };
+
+  const render = async () => {
+    const fixture = TestBed.createComponent(HomeComponent);
+    await fixture.whenStable();
+    return fixture;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    component = new HomeComponent(contentServiceMock);
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize homeContent$ on ngOnInit', (done) => {
-    component.ngOnInit();
-
-    expect(watchContentMock).toHaveBeenCalledWith('home');
-
-    component.homeContent$.subscribe((value) => {
-      expect(value.greeting).toBe('Hello');
-      done();
+    content.set({ greeting: 'Hello', headline: 'I am a', roles: ['Developer', 'Mentor'] });
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [{ provide: ContentService, useValue: contentServiceMock }]
     });
   });
 
-  it('should initialize Typed in ngAfterViewInit when target exists', () => {
-    jest.useFakeTimers();
-    component.ngOnInit();
-    const target = document.createElement('span');
-    const querySpy = jest.spyOn(document, 'querySelector').mockReturnValue(target);
+  it('should render the home section content', async () => {
+    const fixture = await render();
 
-    component.ngAfterViewInit();
-    jest.runAllTimers();
-
-    expect(Typed).toHaveBeenCalled();
-    expect(querySpy).toHaveBeenCalledWith('.typed-element');
-
-    querySpy.mockRestore();
-    jest.useRealTimers();
+    expect(contentServiceMock.contentSignal).toHaveBeenCalledWith('home');
+    expect(fixture.nativeElement.querySelector('.hero-greeting').textContent).toBe('Hello');
   });
 
-  it('should not initialize Typed when target is missing', () => {
-    jest.useFakeTimers();
-    component.ngOnInit();
-    const querySpy = jest.spyOn(document, 'querySelector').mockReturnValue(null);
+  it('should type the roles into the typed element', async () => {
+    const fixture = await render();
 
-    component.ngAfterViewInit();
-    jest.runAllTimers();
-
-    expect(Typed).not.toHaveBeenCalled();
-
-    querySpy.mockRestore();
-    jest.useRealTimers();
+    const target = fixture.nativeElement.querySelector('.typed-element');
+    expect(Typed).toHaveBeenCalledWith(target, expect.objectContaining({ strings: ['Developer', 'Mentor'] }));
+    expect(fixture.componentInstance.longestRole()).toBe('Developer');
   });
 
-  it('should unsubscribe on destroy', () => {
-    const unsubscribe = jest.fn();
-    (component as any).typedSub = {
-      closed: false,
-      unsubscribe,
-    } as unknown as Subscription;
+  it('should restart typing only when the roles change', async () => {
+    const fixture = await render();
+    const typed = jest.mocked(Typed);
+    expect(typed).toHaveBeenCalledTimes(1);
 
-    component.ngOnDestroy();
+    content.set({ greeting: 'Hi', roles: ['Developer', 'Mentor'] });
+    await fixture.whenStable();
+    expect(typed).toHaveBeenCalledTimes(1);
 
-    expect(unsubscribe).toHaveBeenCalled();
+    content.set({ greeting: 'Hi', roles: ['Architect'] });
+    await fixture.whenStable();
+    expect(typed).toHaveBeenCalledTimes(2);
+    expect((typed.mock.results[0].value as any).destroy).toHaveBeenCalled();
+  });
+
+  it('should fall back to the default role while content is loading', async () => {
+    content.set(undefined);
+    const fixture = await render();
+
+    expect(fixture.componentInstance.roles()).toEqual(['Software Developer']);
   });
 });

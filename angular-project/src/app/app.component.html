@@ -3,8 +3,8 @@
     <app-admin></app-admin>
   }
 } @else {
-  <section [ngClass]="{'fixed-header': fixedHeader}">
-    <app-header [activeSection]="activeSection"></app-header>
+  <section [class.fixed-header]="fixedHeader()">
+    <app-header [activeSection]="activeSection()"></app-header>
     <app-main></app-main>
   </section>
 }

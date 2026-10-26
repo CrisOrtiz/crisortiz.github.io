@@ -1,56 +1,47 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { fromEvent, Subscription } from 'rxjs';
+import { Component, AfterViewInit, DestroyRef, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 
-import { TranslateService, LangChangeEvent, TranslateModule } from '@ngx-translate/core'; 
+import { TranslateService } from '@ngx-translate/core';
 import { MainComponent } from './main/main.component';
 import { HeaderComponent } from './header/header.component';
 import { AdminComponent } from './admin/admin.component';
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        CommonModule,
-        TranslateModule,
-        MainComponent,
-        HeaderComponent,
-        AdminComponent
-    ],
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  imports: [
+    MainComponent,
+    HeaderComponent,
+    AdminComponent
+  ],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
-  public fixedHeader: boolean = false;
-  public activeSection: string = 'home';
+export class AppComponent implements AfterViewInit {
+  public readonly fixedHeader = signal(false);
+  public readonly activeSection = signal('home');
   // The content editor lives at /?admin so it works on GitHub Pages without routing
   public readonly isAdmin = new URLSearchParams(window.location.search).has('admin');
 
-  private windowScroll$: Subscription = Subscription.EMPTY;
-  private translateSub: Subscription = Subscription.EMPTY;
-  private sectionObserver?: IntersectionObserver;
+  private translate = inject(TranslateService);
   private document = inject(DOCUMENT);
+  private destroyRef = inject(DestroyRef);
 
-  constructor(
-    private translate: TranslateService,
-    private cd: ChangeDetectorRef)
-  {
-    this.translate.setDefaultLang('en');
+  constructor() {
     const saved = localStorage.getItem('lang');
-    const initial = saved || this.translate.getDefaultLang() || 'en';
+    const initial = saved || this.translate.getFallbackLang() || 'en';
     this.translate.use(initial);
     this.document.documentElement.lang = initial;
 
-    this.translateSub = this.translate.onLangChange.subscribe((e: LangChangeEvent) => {
+    this.translate.onLangChange.pipe(takeUntilDestroyed()).subscribe(e => {
       localStorage.setItem('lang', e.lang);
       this.document.documentElement.lang = e.lang;
-      this.cd.markForCheck();
     });
-  }
-  
-  ngOnInit() {
-    this.windowScroll$ = fromEvent(window, 'scroll')
-      .pipe(throttleTime(30))
+
+    fromEvent(window, 'scroll')
+      .pipe(throttleTime(30), takeUntilDestroyed())
       .subscribe(() => this.onScroll());
   }
 
@@ -63,23 +54,23 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       threshold: [0.25, 0.5, 0.75, 1.0]
     };
 
-    this.sectionObserver = new IntersectionObserver((entries) => {
+    const sectionObserver = new IntersectionObserver((entries) => {
       const visible = entries
         .filter(entry => entry.isIntersecting)
         .sort((a,b) => (b.intersectionRatio - a.intersectionRatio));
 
       if (visible.length > 0) {
-        this.activeSection = visible[0].target.id;
-        this.cd.markForCheck();
+        this.activeSection.set(visible[0].target.id);
       }
     }, options);
 
     sectionIds.forEach(id => {
-      const section = document.getElementById(id);
+      const section = this.document.getElementById(id);
       if (section) {
-        this.sectionObserver?.observe(section);
+        sectionObserver.observe(section);
       }
     });
+    this.destroyRef.onDestroy(() => sectionObserver.disconnect());
   }
 
   // Keeps the bouncing logo up for a short minimum so it does not just flash
@@ -97,18 +88,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }, wait);
   }
 
-  // CAMBIO: Se añadió 'override' o simplemente se asegura su ejecución correcta
-  ngOnDestroy() {
-    this.windowScroll$.unsubscribe();
-    this.translateSub.unsubscribe();
-    if (this.sectionObserver) {
-      this.sectionObserver.disconnect();
-    }
-  }
-  
   onScroll() {
-    // CAMBIO: Lógica de scroll más moderna compatible con todos los navegadores
-    const scrollPos = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    this.fixedHeader = scrollPos >= 100;
+    const scrollPos = window.scrollY || this.document.documentElement.scrollTop || this.document.body.scrollTop || 0;
+    this.fixedHeader.set(scrollPos >= 100);
   }
 }
