@@ -1,91 +1,47 @@
-import { Component, OnInit, OnDestroy, Input, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateService } from '@ngx-translate/core'; 
-import { Subscription } from 'rxjs';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { NgClickOutsideDirective } from 'ng-click-outside2';
 import { ContentService } from '../../services/contentService';
-import { BaseContentComponent } from '../base-content.component';
-import { NgClickOutsideModule } from 'ng-click-outside2'; 
 
 const SECTION_NAME = 'nav';
 
 @Component({
-    selector: 'app-header',
-    imports: [
-        CommonModule,
-        TranslateModule,
-        NgClickOutsideModule
-    ],
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+  selector: 'app-header',
+  imports: [NgClickOutsideDirective],
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent extends BaseContentComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() activeSection: string = 'home';
-  public sidebarOpen: boolean = false;
-  public currentSection = 'home';
-  private langSub: Subscription = Subscription.EMPTY;
+export class HeaderComponent {
+  readonly activeSection = input('home');
 
-  public availableLangs = [
+  private contentService = inject(ContentService);
+  readonly content = this.contentService.contentSignal(SECTION_NAME);
+
+  readonly availableLangs = [
     { code: 'en', label: 'EN' },
     { code: 'es', label: 'ES' }
   ];
-  public currentLang = 'en';
-  
-  constructor(
-    private translate: TranslateService,
-    contentService: ContentService
-  ) {
-    super(contentService);
-    // register langs and default
-    this.translate.addLangs(this.availableLangs.map(l => l.code));
-    this.translate.setDefaultLang('en');
-  }
+  readonly sidebarOpen = signal(false);
+  // Updated right away so the flag flips on click, while the page texts swap after the fade
+  readonly currentLang = signal(this.contentService.lang());
 
-  ngOnInit(): void {
-    const saved = localStorage.getItem('lang');
-    const initial = saved || this.translate.currentLang || this.translate.getDefaultLang() || 'en';
-    this.currentLang = initial;
-    this.translate.use(initial);
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initContent(SECTION_NAME);
-    }, 0);
-  }
-
-  get otherLang(): string {
+  readonly otherLang = computed(() => {
     const codes = this.availableLangs.map(l => l.code);
-    const idx = codes.indexOf(this.currentLang);
+    const idx = codes.indexOf(this.currentLang());
     return codes[(idx + 1) % codes.length];
-  }
+  });
 
   toggleLanguage(): void {
-    const next = this.otherLang;
-    this.currentLang = next;
-    localStorage.setItem('lang', next);
+    const next = this.otherLang();
+    this.currentLang.set(next);
     // ContentService fades the page and switches ngx-translate and Firestore texts together
     this.contentService.setLanguage(next);
   }
 
-
-  fullPageScroll(i:any) {
-    if(this.sidebarOpen)
-      this.sidebarOpen = false;
+  closeMenu(): void {
+    this.sidebarOpen.set(false);
   }
 
-  toggleMenu(){
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
-  onClickedOutside(e: Event) {
-    if(this.sidebarOpen)
-      this.sidebarOpen = false;
-  }
-
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
-    if (this.langSub && !this.langSub.closed) {
-      this.langSub.unsubscribe();
-    }
+  toggleMenu(): void {
+    this.sidebarOpen.update(open => !open);
   }
 }

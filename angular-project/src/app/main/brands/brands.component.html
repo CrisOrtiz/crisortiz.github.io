@@ -6,8 +6,8 @@
                 <img [src]="slide.src"
                     [alt]="slide.alt"
                     [title]="slide.title"
-                    [style.width.px]="slide.width"
-                    [style.height.px]="slide.height"
+                    [style.width.px]="sizes()[slide.src]?.width"
+                    [style.height.px]="sizes()[slide.src]?.height"
                     (load)="fitLogo(slide, $event)">
             </div>
             </ng-template>

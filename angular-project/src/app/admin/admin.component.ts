@@ -1,9 +1,10 @@
-import { Component, OnDestroy, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Auth, GoogleAuthProvider, User, onAuthStateChanged, signInWithPopup, signOut } from '@angular/fire/auth';
-import { Firestore, arrayUnion, deleteDoc, doc, getDoc, serverTimestamp, setDoc } from '@angular/fire/firestore';
+import { GoogleAuthProvider, User, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { arrayUnion, deleteDoc, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { CONTENT_SECTIONS, migrateLegacy, sectionById } from '../content-schema';
+import { FIRESTORE } from '../firebase';
+import { FIREBASE_AUTH } from './firebase-auth';
 
 export const ADMIN_LANGS = [
   { code: 'es', label: 'Español' },
@@ -46,13 +47,13 @@ export function changedKeys(fields: EditableField[], original: Record<string, un
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnDestroy {
-  private auth = inject(Auth);
-  private firestore = inject(Firestore);
+export class AdminComponent {
+  private auth = inject(FIREBASE_AUTH);
+  private firestore = inject(FIRESTORE);
 
   readonly sections = CONTENT_SECTIONS;
   readonly langs = ADMIN_LANGS;
@@ -68,15 +69,13 @@ export class AdminComponent implements OnDestroy {
   busy = signal(false);
   legacyFound = signal(false);
 
+  readonly targetLang = computed(() => this.lang() === 'es' ? 'en' : 'es');
+
   private original: Record<string, unknown> = {};
-  private unsubscribeAuth = onAuthStateChanged(this.auth, user => this.onUser(user));
 
-  ngOnDestroy(): void {
-    this.unsubscribeAuth();
-  }
-
-  get targetLang(): string {
-    return this.lang() === 'es' ? 'en' : 'es';
+  constructor() {
+    const unsubscribeAuth = onAuthStateChanged(this.auth, user => this.onUser(user));
+    inject(DestroyRef).onDestroy(unsubscribeAuth);
   }
 
   async login(): Promise<void> {
@@ -135,7 +134,7 @@ export class AdminComponent implements OnDestroy {
           fields: arrayUnion(...toTranslate),
           requestedAt: serverTimestamp(),
         }, { merge: true });
-        this.status.set(`Guardado. La traducción a ${this.targetLang.toUpperCase()} se aplicará en unos minutos.`);
+        this.status.set(`Guardado. La traducción a ${this.targetLang().toUpperCase()} se aplicará en unos minutos.`);
       } else {
         this.status.set('Guardado.');
       }

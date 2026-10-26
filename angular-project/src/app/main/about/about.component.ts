@@ -1,33 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // 
-import { TranslateModule } from '@ngx-translate/core'; 
-import { ContentService } from '../../../services/contentService'; 
-import { BaseContentComponent } from '../../base-content.component';
+import { Component, inject } from '@angular/core';
+import { ContentService } from '../../../services/contentService';
 
 const SECTION_NAME = 'about';
 
 @Component({
-    selector: 'app-about',
-    imports: [
-        CommonModule,
-        TranslateModule
-    ],
-    templateUrl: './about.component.html',
-    styleUrls: ['./about.component.scss']
+  selector: 'app-about',
+  templateUrl: './about.component.html',
+  styleUrls: ['./about.component.scss']
 })
-export class AboutComponent extends BaseContentComponent implements OnInit {
-  
-  constructor(
-    contentService: ContentService
-  ) {
-    super(contentService);
-  }
-  
-  ngOnInit(): void {
-    setTimeout(() => {
-      this.initContent(SECTION_NAME);
-    }, 0);
-  }  
-
-  xpYears: number = new Date().getFullYear() - 2020;
+export class AboutComponent {
+  readonly content = inject(ContentService).contentSignal(SECTION_NAME);
+  readonly xpYears: number = new Date().getFullYear() - 2020;
 }

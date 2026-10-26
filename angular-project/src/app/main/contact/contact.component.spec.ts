@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, jest } from '@jest/globals';
 import { NgForm } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
-import { BehaviorSubject } from 'rxjs';
+import { signal } from '@angular/core';
 import { ContentService } from '../../../services/contentService';
 import { CONTACT } from '../profile-data';
 
@@ -9,8 +9,8 @@ import { CONTACT_ENDPOINT, ContactComponent } from './contact.component';
 
 describe('ContactComponent', () => {
   let component: ContactComponent;
-  let fetchMock: jest.Mock<any>;
-  const lang$ = new BehaviorSubject<string>('en');
+  let fetchMock: jest.Mock<(...args: any[]) => any>;
+  const lang = signal('en');
 
   const formMock = (invalid = false) => ({
     invalid,
@@ -30,7 +30,7 @@ describe('ContactComponent', () => {
   beforeEach(() => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [{ provide: ContentService, useValue: { currentLang$: lang$.asObservable() } }]
+      providers: [{ provide: ContentService, useValue: { lang: lang.asReadonly() } }]
     });
     component = TestBed.runInInjectionContext(() => new ContactComponent());
     fetchMock = jest.fn();
@@ -91,9 +91,9 @@ describe('ContactComponent', () => {
 
   it('should show the copy in the current language', () => {
     expect(component.t().title).toBe(CONTACT.en.title);
-    lang$.next('es');
+    lang.set('es');
     TestBed.tick();
     expect(component.t().title).toBe(CONTACT.es.title);
-    lang$.next('en');
+    lang.set('en');
   });
 });

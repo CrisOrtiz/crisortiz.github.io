@@ -1,84 +1,46 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { Component, DestroyRef, ElementRef, afterRenderEffect, computed, inject, viewChild } from '@angular/core';
 import Typed from 'typed.js';
 import { typeoptions } from '../constant';
 import { fillTemplate } from '../../content-schema';
 import { ContentService } from '../../../services/contentService';
-import { TranslateModule } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
 
 const SECTION_NAME = 'home';
 
 @Component({
-    selector: 'app-home',
-    imports: [
-        CommonModule,
-        TranslateModule
-    ],
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss']
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  xpYears: number = new Date().getFullYear() - 2020;
-  homeContent$!: Observable<any>;
+export class HomeComponent {
+  readonly xpYears: number = new Date().getFullYear() - 2020;
+  readonly content = inject(ContentService).contentSignal(SECTION_NAME);
+  readonly roles = computed<string[]>(
+    () => this.content()?.roles?.length ? this.content().roles : typeoptions.strings,
+    { equal: (a, b) => a.join('\n') === b.join('\n') }
+  );
+  // The typed text sits over an invisible copy of the longest role, so the
+  // hero keeps its height while the words are typed and deleted.
+  readonly longestRole = computed(() => this.roles().reduce((a, b) => (b.length > a.length ? b : a), ''));
+
+  private typedTarget = viewChild.required<ElementRef<HTMLElement>>('typed');
   private typedInstance?: Typed;
-  private typedSub: Subscription = Subscription.EMPTY;
 
-  constructor(
-    private contentService: ContentService
-  ) {}
-
-  ngOnInit(): void {
-    this.homeContent$ = this.contentService.watchContent(SECTION_NAME).pipe(
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
+  constructor() {
+    // Restarts the typing animation once the roles are rendered, and again if they change
+    afterRenderEffect(() => {
+      const strings = this.roles();
+      this.destroyTyped();
+      this.typedInstance = new Typed(this.typedTarget().nativeElement, { ...typeoptions, strings });
+    });
+    inject(DestroyRef).onDestroy(() => this.destroyTyped());
   }
 
   fill(text: string | undefined): string {
     return fillTemplate(text, { years: this.xpYears });
   }
 
-  // The typed text sits over an invisible copy of the longest role, so the
-  // hero keeps its height while the words are typed and deleted.
-  longestRole(roles: string[] | undefined): string {
-    const list = roles?.length ? roles : typeoptions.strings;
-    return list.reduce((a, b) => (b.length > a.length ? b : a), '');
-  }
-
-  ngAfterViewInit(): void {
-    this.typedSub = this.homeContent$.subscribe((content: any) => {
-      // Allow async-pipe render to flush before querying typed target.
-      setTimeout(() => this.initTypedWithContent(content), 0);
-    });
-  }
-
-  private initTypedWithContent(content: any, attempts = 0) {
-    // destroy previous instance to avoid duplicates/leaks
-    if (this.typedInstance) {
-      try { this.typedInstance.destroy(); } catch {}
-      this.typedInstance = undefined;
-    }
-
-    const typedTarget = document.querySelector('.typed-element');
-    if (!typedTarget) {
-      // Retry once on the next tick if the element was not rendered yet.
-      if (attempts < 1) {
-        setTimeout(() => this.initTypedWithContent(content, attempts + 1), 0);
-      }
-      return;
-    }
-
-    const strings = content?.roles?.length ? content.roles : typeoptions.strings;
-    this.typedInstance = new Typed(typedTarget as HTMLElement, { ...typeoptions, strings });
-  }
-
-  ngOnDestroy(): void {
-    if (this.typedSub && !this.typedSub.closed) {
-      this.typedSub.unsubscribe();
-    }
-    if (this.typedInstance) {
-      try { this.typedInstance.destroy(); } catch {}
-    }
+  private destroyTyped(): void {
+    try { this.typedInstance?.destroy(); } catch {}
+    this.typedInstance = undefined;
   }
 }

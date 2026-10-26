@@ -1,9 +1,11 @@
-import { Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, doc, docData } from '@angular/fire/firestore';
+import { Injectable, Signal, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { doc } from 'firebase/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, combineLatest, merge } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { migrateLegacy, sectionById, withDefaults } from '../app/content-schema';
+import { FIRESTORE, docData } from '../app/firebase';
 
 export const CONTENT_LANGS = ['en', 'es'];
 const CACHE_PREFIX = 'content-v2:';
@@ -11,19 +13,18 @@ const FADE_MS = 150;
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {
+  private firestore = inject(FIRESTORE);
+  private translate = inject(TranslateService);
 
-private _lang$ = new BehaviorSubject<string>(localStorage.getItem('lang') || this.translate.currentLang || this.translate.getDefaultLang() || 'en');
-public currentLang$ = this._lang$.asObservable();
+  private _lang$ = new BehaviorSubject<string>(
+    localStorage.getItem('lang') || this.translate.getCurrentLang() || this.translate.getFallbackLang() || 'en'
+  );
+  /** Active language of the page texts; switches once the fade-out has finished. */
+  public readonly lang: Signal<string> = toSignal(this._lang$, { requireSync: true });
 
   // One live subscription per section holding both languages, so switching never waits on the network
   private sections = new Map<string, Observable<Record<string, any>>>();
   private fadeTimer?: ReturnType<typeof setTimeout>;
-
- constructor(
-  private firestore: Firestore,
-  private translate: TranslateService,
-  private injector: Injector
- ) {}
 
   setLanguage(lang: string) {
     if (!lang || lang === this._lang$.value) return;
@@ -39,14 +40,12 @@ public currentLang$ = this._lang$.asObservable();
   // the old fragmented document and converts it on the fly.
   getContent(lang: string, section: string): Observable<any> {
     const legacyId = sectionById(section)?.legacyId;
-    return runInInjectionContext(this.injector, () => {
-      const current$ = docData(doc(this.firestore, `content/${lang}/sections/${section}`));
-      if (!legacyId) return current$;
-      const legacy$ = docData(doc(this.firestore, `content/${lang}/sections/${legacyId}`));
-      return combineLatest([current$, legacy$]).pipe(
-        map(([current, legacy]) => current ?? (legacy ? migrateLegacy(section, legacy) : undefined))
-      );
-    });
+    const current$ = docData(doc(this.firestore, `content/${lang}/sections/${section}`));
+    if (!legacyId) return current$;
+    const legacy$ = docData(doc(this.firestore, `content/${lang}/sections/${legacyId}`));
+    return combineLatest([current$, legacy$]).pipe(
+      map(([current, legacy]) => current ?? (legacy ? migrateLegacy(section, legacy) : undefined))
+    );
   }
 
   // Emits the section content for the active language, starting from the last copy saved in
@@ -62,6 +61,11 @@ public currentLang$ = this._lang$.asObservable();
       // The cached copy and the live Firestore copy are usually identical: don't re-render for that
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
+  }
+
+  /** watchContent as a signal; call it from a field initializer or constructor. */
+  contentSignal(section: string): Signal<any> {
+    return toSignal(this.watchContent(section));
   }
 
   private bothLanguages(section: string): Observable<Record<string, any>> {

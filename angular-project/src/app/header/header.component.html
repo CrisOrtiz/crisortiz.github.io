@@ -1,5 +1,5 @@
 <!-- Header -->
-  <div class="header-top-fixed py-0 one-page-nav" [ngClass]="{'menu-open menu-open-desk' : sidebarOpen}">
+  <div class="header-top-fixed py-0 one-page-nav" [class.menu-open]="sidebarOpen()" [class.menu-open-desk]="sidebarOpen()">
     <div class="container">
         <!-- Brand -->
         <div class="logo">
@@ -12,47 +12,47 @@
             <button class="px-btn lang-cta d-flex align-items-center px-3 py-0"
                     (click)="toggleLanguage()"
                     type="button"
-                    [attr.aria-label]="'Current language: ' + currentLang + '. Switch to: ' + otherLang">
-                <img class="flag-icon" [src]="'assets/flags/' + currentLang + '.svg'" [alt]="currentLang + ' flag'">
-                <span class="ms-2">{{ currentLang.toUpperCase() }}</span>
+                    [attr.aria-label]="'Current language: ' + currentLang() + '. Switch to: ' + otherLang()">
+                <img class="flag-icon" [src]="'assets/flags/' + currentLang() + '.svg'" [alt]="currentLang() + ' flag'">
+                <span class="ms-2">{{ currentLang().toUpperCase() }}</span>
             </button>
         </div>
         <ul class="main-menu">
             <li>
-                <a class="menu-item" [class.active]="activeSection === 'home'" href="#home" (click)="fullPageScroll('home')">
-                    {{ content?.home }}
+                <a class="menu-item" [class.active]="activeSection() === 'home'" href="#home" (click)="closeMenu()">
+                    {{ content()?.home }}
                 </a>
             </li>
             <li>
-                <a class="menu-item" [class.active]="activeSection === 'about'" href="#about" (click)="fullPageScroll('about')"> 
-                    {{ content?.about }}
+                <a class="menu-item" [class.active]="activeSection() === 'about'" href="#about" (click)="closeMenu()"> 
+                    {{ content()?.about }}
                 </a>
             </li>
             <li>
-                <a class="menu-item" [class.active]="activeSection === 'project'" href="#project" (click)="fullPageScroll('project')">
-                    {{ content?.projects }}
+                <a class="menu-item" [class.active]="activeSection() === 'project'" href="#project" (click)="closeMenu()">
+                    {{ content()?.projects }}
                 </a>
             </li>
             <li>
-                <a class="menu-item" [class.active]="activeSection === 'services'" href="#services" (click)="fullPageScroll('services')">
-                    {{ content?.education }}
+                <a class="menu-item" [class.active]="activeSection() === 'services'" href="#services" (click)="closeMenu()">
+                    {{ content()?.education }}
                 </a>
             </li>
             <li>
-                <a class="menu-item" [class.active]="activeSection === 'experience'" href="#experience" (click)="fullPageScroll('experience')">
-                    {{ content?.experience }}
+                <a class="menu-item" [class.active]="activeSection() === 'experience'" href="#experience" (click)="closeMenu()">
+                    {{ content()?.experience }}
                 </a>
             </li>
             <li>
-                <a class="menu-item" [class.active]="activeSection === 'contact'" href="#contact" (click)="fullPageScroll('contact')">
-                    {{ content?.contact }}
+                <a class="menu-item" [class.active]="activeSection() === 'contact'" href="#contact" (click)="closeMenu()">
+                    {{ content()?.contact }}
                 </a>
             </li>
         </ul>
     
     <!-- Top Menu -->
-        <div class="d-flex" (clickOutside)="onClickedOutside($event)">
-            <button class="toggler-menu d-lg-none" type="button" aria-label="Menu" [attr.aria-expanded]="sidebarOpen" [ngClass]="{'open': sidebarOpen}" (click)="toggleMenu()">
+        <div class="d-flex" (clickOutside)="closeMenu()">
+            <button class="toggler-menu d-lg-none" type="button" aria-label="Menu" [attr.aria-expanded]="sidebarOpen()" [class.open]="sidebarOpen()" (click)="toggleMenu()">
                 <span></span>
             </button>
         </div>
@@ -62,9 +62,9 @@
         <button class="px-btn lang-cta d-flex align-items-center px-3 py-0"
                 (click)="toggleLanguage()"
                 type="button"
-                [attr.aria-label]="'Current language: ' + currentLang + '. Switch to: ' + otherLang">
-            <img class="flag-icon" [src]="'assets/flags/' + currentLang + '.svg'" [alt]="currentLang + ' flag'" style="max-width: 60%;">
-            <span class="d-none d-lg-inline ms-2">{{ currentLang.toUpperCase() }}</span>
+                [attr.aria-label]="'Current language: ' + currentLang() + '. Switch to: ' + otherLang()">
+            <img class="flag-icon" [src]="'assets/flags/' + currentLang() + '.svg'" [alt]="currentLang() + ' flag'" style="max-width: 60%;">
+            <span class="d-none d-lg-inline ms-2">{{ currentLang().toUpperCase() }}</span>
         </button>
     </div>
     <!-- / -->

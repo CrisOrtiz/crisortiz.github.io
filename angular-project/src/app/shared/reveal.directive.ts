@@ -1,24 +1,23 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Directive, ElementRef, OnDestroy, OnInit, inject, input } from '@angular/core';
 
 /**
  * Fades and slides an element in the first time it scrolls into view.
  * Styles live in assets/scss/_portfolio.scss (.reveal / .is-visible).
  */
 @Directive({
-  selector: '[appReveal]',
-  standalone: true
+  selector: '[appReveal]'
 })
 export class RevealDirective implements OnInit, OnDestroy {
-  @Input() revealDelay = 0;
+  readonly revealDelay = input(0);
 
-  private el = inject(ElementRef<HTMLElement>);
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
   private observer?: IntersectionObserver;
 
   ngOnInit(): void {
     const node = this.el.nativeElement;
     node.classList.add('reveal');
-    if (this.revealDelay) {
-      node.style.transitionDelay = `${this.revealDelay}ms`;
+    if (this.revealDelay()) {
+      node.style.transitionDelay = `${this.revealDelay()}ms`;
     }
 
     if (typeof IntersectionObserver === 'undefined') {

@@ -1,6 +1,4 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RevealDirective } from '../../shared/reveal.directive';
 import { ContentService } from '../../../services/contentService';
 import { EXPERIENCE, EXPERIENCE_HEADING, pickLang } from '../profile-data';
@@ -13,7 +11,6 @@ const LABELS = {
 @Component({
     selector: 'app-experience',
     imports: [
-        CommonModule,
         RevealDirective
     ],
     templateUrl: './experience.component.html',
@@ -21,7 +18,7 @@ const LABELS = {
 })
 export class ExperienceComponent {
   public readonly initialCount = 4;
-  private lang = toSignal(inject(ContentService).currentLang$, { initialValue: 'en' });
+  private lang = inject(ContentService).lang;
   public items = computed(() => EXPERIENCE[pickLang(this.lang())]);
   public heading = computed(() => EXPERIENCE_HEADING[pickLang(this.lang())]);
   public labels = computed(() => LABELS[pickLang(this.lang())]);
