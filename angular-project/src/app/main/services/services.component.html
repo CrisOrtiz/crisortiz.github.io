@@ -3,11 +3,11 @@
         <h6><span>{{ heading().tag }}</span></h6>
         <h2>{{ heading().title }} <span>{{ heading().highlight }}</span></h2>
     </div>
-    <div class="services-carousel pf-carousel">
+    <div class="services-carousel pf-carousel" appReveal>
         <owl-carousel-o [options]="customOptions">
-            @for (item of items(); track item.title; let i = $index) {
+            @for (item of items(); track item.title) {
                 <ng-template carouselSlide>
-                <div class="services-box" appReveal [revealDelay]="i * 100">
+                <div class="services-box">
                     <i class="edu-watermark" [class]="item.icon" aria-hidden="true"></i>
                     <span class="edu-period">{{ item.period }}</span>
                     <div class="services-body">
